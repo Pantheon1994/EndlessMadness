@@ -8,6 +8,8 @@ services:
     branch: main
     buildCommand: npm install && npm run build:prod
     staticPublishPath: ./dist
+    env: node
+    nodeVersion: "20"
     headers:
       - path: /*
         name: X-Robots-Tag
