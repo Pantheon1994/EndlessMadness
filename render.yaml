@@ -1,15 +1,14 @@
 services:
-  - type: web
+  - type: static
     name: endless-madness
-    runtime: node
-    plan: free
-    region: oregon
-    repo: https://github.com/votre-username/endless-madness.git # Remplacez par votre repo GitHub
-    branch: main
     buildCommand: npm install && npm run build:prod
-    staticPublishPath: ./dist
-    env: node
-    nodeVersion: "20"
+    staticPublishPath: ./dist/browser
+    pullRequestPreviewsEnabled: true
+    buildFilter:
+      paths:
+      - src/**
+      - package.json
+      - angular.json
     headers:
       - path: /*
         name: X-Robots-Tag

@@ -21,7 +21,7 @@
 ### Configuration automatique:
 - ✅ Build Command: `npm install && npm run build:prod`
 - ✅ Publish Directory: `dist`
-- ✅ Node Version: 18
+- ✅ Node Version: 20
 - ✅ Redirections pour Angular routing
 
 ---

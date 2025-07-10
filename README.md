@@ -23,7 +23,7 @@ Un jeu de cartes tactique développé en Angular où le joueur affronte les éta
 ## 🚀 Développement local
 
 ### Prérequis
-- Node.js (version 18 ou supérieure)
+- Node.js (version 20 ou supérieure)
 - npm
 
 ### Installation
@@ -69,7 +69,7 @@ npm run build:prod
 2. **Configurer les paramètres** :
    - **Build Command**: `npm install && npm run build:prod`
    - **Publish Directory**: `dist`
-   - **Node Version**: 18
+   - **Node Version**: 20
 
 3. **Variables d'environnement** (optionnel) :
    - Vous pouvez ajouter des variables si nécessaire

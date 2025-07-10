@@ -4,7 +4,7 @@
 
 ### 🎯 Render (Recommandé)
 - `render.yaml` - Configuration automatique pour Render
-- `.nvmrc` - Version Node.js (18)
+- `.nvmrc` - Version Node.js (20)
 
 ### ⚡ Vercel
 - `vercel.json` - Configuration pour Vercel
@@ -24,6 +24,10 @@
 ### 📚 Documentation
 - `README.md` - Documentation complète du projet
 - `DEPLOY.md` - Guide de déploiement rapide
+- `QUICK_DEPLOY.md` - Guide de déploiement d'urgence (solutions rapides)
+- `TROUBLESHOOTING.md` - Guide de dépannage complet
+- `RENDER_MANUAL.md` - Configuration manuelle pour Render
+- `NODE_FIX.md` - Correction de la version Node.js
 - `CONFIGURATION.md` - Ce fichier
 
 ## Modifications apportées
