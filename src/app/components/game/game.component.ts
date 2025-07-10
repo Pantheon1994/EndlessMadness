@@ -199,6 +199,10 @@ export class GameComponent implements OnInit, OnDestroy {
           this.playHealAnimation(targetElement);
         } else if (spellCard.id === 'shield-boost') {
           this.playSpellAnimation(targetElement);
+        } else if (spellCard.id === 'arsenal') {
+          this.playSpellAnimation(targetElement);
+        } else if (spellCard.id === 'divine-protection') {
+          this.playSpellAnimation(targetElement);
         }
       }
       
@@ -226,6 +230,18 @@ export class GameComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           this.showDamageNumber(enemyElement, 'damage');
         }, 500);
+      } else if (enemyElement && spellCard.id === 'stun-bolt') {
+        this.playSpellAnimation(enemyElement);
+        // Effet d'étourdissement après un délai
+        setTimeout(() => {
+          this.showDamageNumber(enemyElement, 'stun');
+        }, 500);
+      } else if (enemyElement && spellCard.id === 'poison') {
+        this.playSpellAnimation(enemyElement);
+        // Effet de poison après un délai
+        setTimeout(() => {
+          this.showDamageNumber(enemyElement, 'poison');
+        }, 500);
       }
       
       if (this.gameService.selectTarget(undefined, enemyIndex)) {
@@ -252,7 +268,8 @@ export class GameComponent implements OnInit, OnDestroy {
     
     const spellCard = this.awaitingTarget.card;
     // Définir quelles cartes peuvent être ciblées par quels sorts
-    if (spellCard.id === 'healing-potion' || spellCard.id === 'shield-boost') {
+    if (spellCard.id === 'healing-potion' || spellCard.id === 'shield-boost' || 
+        spellCard.id === 'arsenal' || spellCard.id === 'divine-protection') {
       return true; // Ces sorts peuvent cibler toutes les unités alliées
     }
     return false;
@@ -264,7 +281,7 @@ export class GameComponent implements OnInit, OnDestroy {
     if (this.awaitingTarget) {
       const spellCard = this.awaitingTarget.card;
       // Définir quels ennemis peuvent être ciblés par quels sorts
-      if (spellCard.id === 'fireball') {
+      if (spellCard.id === 'fireball' || spellCard.id === 'stun-bolt' || spellCard.id === 'poison') {
         return enemy.currentHp > 0; // Seulement les ennemis vivants
       }
     }
@@ -473,10 +490,32 @@ export class GameComponent implements OnInit, OnDestroy {
     setTimeout(() => particles.remove(), 3000);
   }
 
-  private showDamageNumber(element: HTMLElement, type: 'damage' | 'heal'): void {
+  private showDamageNumber(element: HTMLElement, type: 'damage' | 'heal' | 'stun' | 'poison'): void {
     const damageNum = document.createElement('div');
-    damageNum.className = type === 'damage' ? 'damage-number' : 'heal-number';
-    damageNum.textContent = type === 'damage' ? '-' + Math.floor(Math.random() * 5 + 1) : '+' + Math.floor(Math.random() * 3 + 2);
+    let className = 'damage-number';
+    let text = '';
+    
+    switch (type) {
+      case 'damage':
+        className = 'damage-number';
+        text = '-' + Math.floor(Math.random() * 5 + 1);
+        break;
+      case 'heal':
+        className = 'heal-number';
+        text = '+' + Math.floor(Math.random() * 3 + 2);
+        break;
+      case 'stun':
+        className = 'stun-number';
+        text = '💫 Étourdi!';
+        break;
+      case 'poison':
+        className = 'poison-number';
+        text = '☠️ Poison!';
+        break;
+    }
+    
+    damageNum.className = className;
+    damageNum.textContent = text;
     damageNum.style.left = Math.random() * 50 + 25 + '%';
     damageNum.style.top = '10px';
     
