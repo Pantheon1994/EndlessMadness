@@ -1,0 +1,117 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Styles globaux pour mobile */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Améliorer la performance des animations sur mobile */
+.card, .enemy, .field-card, .btn {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Améliorer les boutons pour mobile */
+.btn {
+  touch-action: manipulation;
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px; /* Taille minimum pour mobile */
+  padding: 12px 20px;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Améliorer le scroll sur mobile */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Améliorer les zones de saisie pour mobile */
+input, select, textarea {
+  font-size: 16px; /* Éviter le zoom sur iOS */
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 8px;
+  border: 2px solid #ddd;
+  padding: 12px;
+}
+
+/* Éviter le zoom sur les éléments cliquables */
+button, input, select, textarea {
+  font-size: inherit;
+}
+
+/* Améliorer les transitions pour mobile */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Styles pour les appareils avec orientation portrait */
+@media (orientation: portrait) and (max-width: 768px) {
+  .game-container {
+    padding: 5px;
+  }
+  
+  .battle-area {
+    gap: 10px;
+  }
+}
+
+/* Styles pour les appareils avec orientation paysage */
+@media (orientation: landscape) and (max-height: 480px) {
+  .game-container {
+    padding: 5px;
+  }
+  
+  .game-header {
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .battle-area {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+}

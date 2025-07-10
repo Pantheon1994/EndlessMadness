@@ -1,0 +1,1641 @@
+/* Design moderne et fonctionnel pour mobile et desktop - Endless Madness */
+
+/* === LAYOUT PRINCIPAL === */
+.game-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+}
+
+/* === EN-TÊTE === */
+.game-header {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    padding: 16px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 16px;
+    gap: 20px;
+}
+
+.game-info span {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 8px 12px;
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: var(--transition);
+}
+
+.game-info span:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+.phase-indicator {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.phase-player {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.phase-enemy {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.battle-area {
+    flex: 1;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 16px;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    min-height: 500px;
+}
+
+.enemies-section {
+    margin-bottom: 20px;
+}
+
+.enemies-section h3 {
+    color: #dc2626;
+    font-weight: bold;
+    margin-bottom: 12px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.enemies-grid {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    min-height: 120px;
+}
+
+.enemies-grid > div {
+    width: 120px !important;
+    height: 150px !important;
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+    border: 3px solid #fbbf24;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    color: white;
+}
+
+.enemies-grid > div:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+    border-color: #f59e0b;
+}
+
+.enemies-grid > div.attack-target:hover,
+.enemies-grid > div.spell-target:hover {
+    border-color: #10b981;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+}
+
+.enemy-name {
+    font-size: 12px !important;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    line-height: 1.2;
+}
+
+.enemy-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    text-align: center;
+    margin-top: auto;
+}
+
+.enemy-stats .hp,
+.enemy-stats .attack {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-size: 11px !important;
+    font-weight: bold;
+}
+
+.enemy-effect {
+    font-size: 9px;
+    color: #fbbf24;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Section du terrain du joueur */
+.player-field {
+    margin-bottom: 20px;
+}
+
+.player-field h3 {
+    color: #3b82f6;
+    font-weight: bold;
+    margin-bottom: 12px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.field-grid {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    min-height: 120px;
+    background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.05) 50%, transparent 100%);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.field-card {
+    width: 130px !important;
+    height: 160px !important;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border: 3px solid #60a5fa;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    color: white;
+}
+
+.field-card.can-attack {
+    border-color: #10b981;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+    animation: attackGlow 2s ease-in-out infinite;
+}
+
+.field-card.mad {
+    border-color: #ec4899;
+    background: linear-gradient(135deg, #be185d 0%, #ec4899 100%);
+    animation: madnessEffect 2s ease-in-out infinite;
+}
+
+.field-card:hover {
+    transform: translateY(-4px) scale(1.05);
+    z-index: 10;
+}
+
+.field-card.targetable:hover {
+    border-color: #10b981;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+}
+
+.field-card .card-name {
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    line-height: 1.2;
+    max-height: 30px;
+    overflow: hidden;
+}
+
+.field-card .card-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    text-align: center;
+    margin-top: auto;
+}
+
+.field-card .card-stats .hp,
+.field-card .card-stats .attack,
+.field-card .card-stats .defense {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 10px;
+    padding: 4px 8px;
+    font-size: 11px !important;
+    font-weight: bold;
+}
+
+.empty-slot {
+    width: 100px;
+    height: 130px;
+    border: 2px dashed #94a3b8;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 12px;
+    text-align: center;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.madness-info {
+    font-size: 8px;
+    text-align: center;
+    background: rgba(236, 72, 153, 0.9);
+    border-radius: 6px;
+    padding: 2px;
+    margin: 2px 0;
+}
+
+.madness-effects {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.madness-effects .bonus {
+    color: #10b981;
+}
+
+.madness-effects .drawback {
+    color: #ef4444;
+}
+
+.madness-counter {
+    font-size: 8px;
+    text-align: center;
+    color: #fbbf24;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 4px;
+    padding: 1px 3px;
+}
+
+.unit-actions {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* === MAIN DU JOUEUR === */
+.player-hand {
+    margin-top: 20px;
+    padding: 0 10px;
+}
+
+.player-hand h3 {
+    color: #3b82f6;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.hand-cards {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 16px;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-height: 160px;
+    align-items: center;
+}
+
+.hand-card {
+    width: 170px !important;
+    height: 220px !important;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border: 3px solid #92400e;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    padding: 12px !important;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    color: white;
+}
+
+.hand-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    z-index: 20;
+    box-shadow: 0 8px 25px rgba(217, 119, 6, 0.5);
+}
+
+.hand-card.affordable {
+    border-color: #10b981;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.hand-card.expensive {
+    border-color: #ef4444;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    opacity: 0.7;
+}
+
+.hand-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.hand-card .card-name {
+    font-size: 14px !important;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.hand-card .card-cost {
+    background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+    color: white;
+    border-radius: 50%;
+    width: 28px !important;
+    height: 28px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px !important;
+    font-weight: bold;
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.hand-card .card-type {
+    font-size: 12px !important;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.hand-card .card-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 8px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.hand-card .card-stats span {
+    font-size: 11px !important;
+    padding: 3px 8px !important;
+}
+
+.hand-card .card-effect {
+    font-size: 11px !important;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.hand-card .madness-threshold {
+    font-size: 9px;
+    color: #ec4899;
+    text-align: center;
+    margin-top: auto;
+}
+
+/* === BOUTONS === */
+.btn {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+}
+
+.btn-cancel {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+}
+
+.btn-attack {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    font-size: 12px;
+    padding: 6px 12px;
+}
+
+.btn-attack.can-attack {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    animation: attackButtonGlow 2s ease-in-out infinite;
+}
+
+.btn-large {
+    padding: 14px 24px;
+    font-size: 16px;
+    min-width: 150px;
+}
+
+@keyframes attackButtonGlow {
+    0%, 100% { 
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+    }
+    50% { 
+        box-shadow: 0 4px 16px rgba(16, 185, 129, 0.8);
+    }
+}
+
+@keyframes attackTargetPulse {
+    0%, 100% { 
+        border-color: #10b981;
+        box-shadow: 0 0 20px rgba(16, 185, 129, 0.8);
+    }
+    50% { 
+        border-color: #34d399;
+        box-shadow: 0 0 30px rgba(16, 185, 129, 1);
+    }
+}
+
+@keyframes spellTargetPulse {
+    0%, 100% { 
+        border-color: #8b5cf6;
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.8);
+    }
+    50% { 
+        border-color: #a78bfa;
+        box-shadow: 0 0 30px rgba(139, 92, 246, 1);
+    }
+}
+
+@keyframes targetablePulse {
+    0%, 100% { 
+        border-color: #f59e0b;
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.8);
+    }
+    50% { 
+        border-color: #fbbf24;
+        box-shadow: 0 0 30px rgba(245, 158, 11, 1);
+    }
+}
+
+/* === BULLES DE STATS (PV et ATTAQUE) === */
+/* Styles de base pour toutes les bulles */
+.stat-bubble {
+    position: absolute;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 11px !important;
+    font-weight: bold !important;
+    color: white !important;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+    border: 2px solid white !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    z-index: 10 !important;
+    min-width: unset !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Bulle PV - rouge, en haut à droite */
+.hp-bubble {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    top: -8px !important;
+    right: -8px !important;
+}
+
+/* Bulle Attaque - orange, en haut à gauche */
+.attack-bubble {
+    background: linear-gradient(135deg, #000000 0%, #555555 100%) !important;
+    top: -8px !important;
+    left: -8px !important;
+}
+
+/* Bulle Défense - bleue, en bas à gauche */
+.defense-bubble {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    bottom: -8px !important;
+    left: -8px !important;
+}
+
+/* Bulle Mana - violette, en bas à droite */
+.mana-bubble {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
+    bottom: -8px !important;
+    right: -8px !important;
+}
+
+/* Application aux cartes sur le terrain */
+.field-card {
+    position: relative !important;
+}
+
+/* Application aux cartes en main */
+.hand-card {
+    position: relative !important;
+}
+
+/* Application aux ennemis */
+.enemies-grid > div {
+    position: relative !important;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+    .stat-bubble {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 10px !important;
+    }
+}
+
+/* Ajuster le contenu des cartes pour faire de la place aux bulles */
+.field-card .card-name,
+.hand-card .card-name,
+.enemies-grid .enemy-name {
+    margin: 8px 16px 0 16px !important;
+    text-align: center !important;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+    .field-card .hp,
+    .hand-card .hp,
+    .enemies-grid .hp,
+    .field-card .attack,
+    .hand-card .attack,
+    .enemies-grid .attack,
+    .field-card .defense,
+    .hand-card .defense {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 10px !important;
+    }
+}
+
+/* === FIN BULLES DE STATS === */
+
+/* Responsive pour desktop */
+@media (min-width: 1024px) {
+    .game-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 24px;
+        gap: 24px;
+    }
+
+    .game-header {
+        padding: 20px 24px;
+        margin-bottom: 20px;
+        border-radius: 16px;
+    }
+
+    .game-info {
+        font-size: 18px;
+        gap: 24px;
+    }
+
+    .player-mana,
+    .player-gold,
+    .floor-info {
+        font-size: 20px;
+        padding: 12px 20px;
+    }
+
+    .battle-area {
+        gap: 32px;
+        padding: 32px;
+        margin-bottom: 24px;
+        min-height: 400px;
+        border-radius: 20px;
+    }
+
+    .enemies,
+    .player-field {
+        gap: 16px;
+        min-height: 140px;
+        padding: 16px;
+    }
+
+    .enemy,
+    .field-card {
+        width: 120px;
+        height: 160px;
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .enemy-name,
+    .card-name {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .enemy-attack,
+    .enemy-hp,
+    .card-attack,
+    .card-hp {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .hand {
+        padding: 20px 24px;
+        gap: 12px;
+        margin-bottom: 20px;
+        min-height: 140px;
+        border-radius: 16px;
+    }
+
+    .hand .card {
+        min-width: 90px;
+        width: 90px;
+        height: 120px;
+        padding: 8px;
+        border-radius: 10px;
+    }
+
+    .hand .card:hover {
+        transform: translateY(-8px) scale(1.05);
+        z-index: 10;
+    }
+
+    .card-cost {
+        width: 26px;
+        height: 26px;
+        font-size: 14px;
+        font-weight: bold;
+        top: -6px;
+        left: -6px;
+    }
+
+    .card-name {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+
+    .card-description {
+        font-size: 10px;
+        line-height: 1.3;
+    }
+
+    .game-controls {
+        gap: 16px;
+        padding: 20px;
+    }
+
+    .btn {
+        padding: 14px 28px;
+        font-size: 16px;
+        min-width: 140px;
+        border-radius: 10px;
+    }
+
+    .status-message {
+        padding: 32px 48px;
+        font-size: 24px;
+        border-radius: 16px;
+    }
+
+    .targeting-message {
+        padding: 28px 40px;
+        font-size: 18px;
+        border-radius: 16px;
+    }
+
+    /* Hover effects améliorés pour cartes */
+    .hand .card {
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .hand .card:hover {
+        transform: translateY(-12px) scale(1.08);
+        z-index: 15;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .hand .card.playable:hover {
+        transform: translateY(-16px) scale(1.12);
+        box-shadow: 0 24px 48px rgba(16, 185, 129, 0.4);
+        border-color: #059669;
+    }
+
+    /* Hover effects pour ennemis et cartes de terrain */
+    .enemy:hover,
+    .field-card:hover {
+        transform: translateY(-8px) scale(1.05);
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+        z-index: 10;
+    }
+
+    .enemy.attack-target:hover {
+        transform: translateY(-10px) scale(1.08);
+        box-shadow: 0 20px 40px rgba(16, 185, 129, 0.5);
+    }
+
+    /* Boutons avec meilleurs hover effects */
+    .btn:hover:not(:disabled) {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Support clavier */
+    .card:focus,
+    .enemy:focus,
+    .field-card:focus {
+        outline: 3px solid #3b82f6;
+        outline-offset: 3px;
+        border-radius: 12px;
+    }
+
+    .btn:focus {
+        outline: 3px solid #3b82f6;
+        outline-offset: 3px;
+    }
+
+    /* Curseur pointer pour les éléments interactifs */
+    .card.playable,
+    .enemy.attack-target,
+    .field-card.targetable {
+        cursor: pointer;
+    }
+
+    .card:not(.playable),
+    .enemy:not(.attack-target),
+    .field-card:not(.targetable) {
+        cursor: default;
+    }
+
+    /* Animation plus fluide pour les stats */
+    .player-mana,
+    .player-gold,
+    .floor-info {
+        transition: all 0.3s ease;
+    }
+
+    .player-mana:hover,
+    .player-gold:hover,
+    .floor-info:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+}
+
+/* Responsive pour tablette */
+@media (min-width: 769px) and (max-width: 1023px) {
+    .game-container {
+        padding: 16px;
+        gap: 16px;
+    }
+
+    .game-header {
+        padding: 16px 20px;
+        margin-bottom: 16px;
+    }
+
+    .game-info {
+        font-size: 16px;
+    }
+
+    .battle-area {
+        gap: 20px;
+        padding: 20px;
+        margin-bottom: 16px;
+        min-height: 280px;
+    }
+
+    .enemies,
+    .player-field {
+        gap: 12px;
+        min-height: 100px;
+    }
+
+    .enemy,
+    .field-card {
+        width: 90px;
+        height: 120px;
+        padding: 8px;
+    }
+
+    .enemy-name,
+    .card-name {
+        font-size: 11px;
+    }
+
+    .enemy-attack,
+    .enemy-hp,
+    .card-attack,
+    .card-hp {
+        width: 22px;
+        height: 22px;
+        font-size: 11px;
+    }
+
+    .hand {
+        padding: 16px;
+        gap: 8px;
+        margin-bottom: 16px;
+        min-height: 100px;
+    }
+
+    .hand .card {
+        min-width: 75px;
+        width: 75px;
+        height: 100px;
+        padding: 6px;
+    }
+
+    .card-cost {
+        width: 22px;
+        height: 22px;
+        font-size: 11px;
+        top: -5px;
+        left: -5px;
+    }
+
+    .game-controls {
+        gap: 12px;
+    }
+
+    .btn {
+        padding: 12px 20px;
+        font-size: 14px;
+        min-width: 120px;
+    }
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+    .game-container {
+        padding: 8px;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .game-header {
+        padding: 8px 12px;
+        margin-bottom: 8px;
+    }
+
+    .game-info {
+        font-size: 12px;
+    }
+
+    .battle-area {
+        gap: 12px;
+        padding: 12px;
+        margin-bottom: 8px;
+        min-height: auto;
+    }
+
+    .enemies,
+    .player-field {
+        gap: 8px;
+        min-height: 80px;
+    }
+
+    .enemy,
+    .field-card {
+        width: 70px;
+        height: 90px;
+        padding: 4px;
+    }
+
+    .enemy-name,
+    .card-name {
+        font-size: 8px;
+    }
+
+    .enemy-attack,
+    .enemy-hp,
+    .card-attack,
+    .card-hp {
+        width: 18px;
+        height: 18px;
+        font-size: 9px;
+    }
+
+    .hand {
+        padding: 8px;
+        gap: 4px;
+        margin-bottom: 8px;
+        min-height: 80px;
+        overflow-x: auto;
+    }
+
+    .hand .card {
+        min-width: 60px;
+        width: 60px;
+        height: 80px;
+        padding: 4px;
+    }
+
+    .card-cost {
+        width: 18px;
+        height: 18px;
+        font-size: 9px;
+        top: -4px;
+        left: -4px;
+    }
+
+    .game-controls {
+        gap: 8px;
+    }
+
+    .btn {
+        padding: 10px 16px;
+        font-size: 12px;
+        min-width: 100px;
+    }
+}
+
+/* Tooltip simple pour desktop */
+@media (min-width: 1024px) {
+    .card[title]:hover::after {
+        content: attr(title);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        white-space: nowrap;
+        z-index: 1000;
+        margin-bottom: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .card[title]:hover::before {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 6px solid rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        margin-bottom: 2px;
+    }
+}
+
+/* Styles pour les classes utilisées dans le HTML */
+
+/* Section des ennemis */
+.enemies-section {
+    margin-bottom: 20px;
+}
+
+.enemies-section h3 {
+    color: #dc2626;
+    font-weight: bold;
+    margin-bottom: 12px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.enemies-grid {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    min-height: 120px;
+}
+
+.enemies-grid > div {
+    width: 120px !important;
+    height: 150px !important;
+    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+    border: 3px solid #fbbf24;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    color: white;
+}
+
+.enemies-grid > div:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+    border-color: #f59e0b;
+}
+
+.enemies-grid > div.attack-target:hover,
+.enemies-grid > div.spell-target:hover {
+    border-color: #10b981;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+}
+
+.enemy-name {
+    font-size: 12px !important;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    line-height: 1.2;
+}
+
+.enemy-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    text-align: center;
+    margin-top: auto;
+}
+
+.enemy-stats .hp,
+.enemy-stats .attack {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 12px;
+    padding: 4px 8px;
+    font-size: 11px !important;
+    font-weight: bold;
+}
+
+.enemy-effect {
+    font-size: 9px;
+    color: #fbbf24;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Section du terrain du joueur */
+.player-field {
+    margin-bottom: 20px;
+}
+
+.player-field h3 {
+    color: #3b82f6;
+    font-weight: bold;
+    margin-bottom: 12px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.field-grid {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    min-height: 120px;
+    background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.05) 50%, transparent 100%);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.field-card {
+    width: 150px !important;
+    height: 180px !important;
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    border: 3px solid #60a5fa;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    color: white;
+}
+
+.field-card.can-attack {
+    border-color: #10b981;
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+    animation: attackGlow 2s ease-in-out infinite;
+}
+
+.field-card.mad {
+    border-color: #ec4899;
+    background: linear-gradient(135deg, #be185d 0%, #ec4899 100%);
+    animation: madnessEffect 2s ease-in-out infinite;
+}
+
+.field-card:hover {
+    transform: translateY(-4px) scale(1.05);
+    z-index: 10;
+}
+
+.field-card.targetable:hover {
+    border-color: #10b981;
+    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+}
+
+.field-card .card-name {
+    font-size: 14px !important;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+    line-height: 1.2;
+    max-height: 30px;
+    overflow: hidden;
+}
+
+.field-card .card-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px !important;
+    width: 100%;
+    text-align: center;
+    margin-top: auto;
+}
+
+.field-card .card-stats .hp,
+.field-card .card-stats .attack,
+.field-card .card-stats .defense {
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 10px;
+}
+
+.empty-slot {
+    width: 100px;
+    height: 130px;
+    border: 2px dashed #94a3b8;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 12px;
+    text-align: center;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.madness-info {
+    font-size: 8px;
+    text-align: center;
+    background: rgba(236, 72, 153, 0.9);
+    border-radius: 6px;
+    padding: 2px;
+    margin: 2px 0;
+}
+
+.madness-effects {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.madness-effects .bonus {
+    color: #10b981;
+}
+
+.madness-effects .drawback {
+    color: #ef4444;
+}
+
+.madness-counter {
+    font-size: 8px;
+    text-align: center;
+    color: #fbbf24;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 4px;
+    padding: 1px 3px;
+}
+
+.unit-actions {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* === MAIN DU JOUEUR === */
+.player-hand {
+    margin-top: 20px;
+    padding: 0 10px;
+}
+
+.player-hand h3 {
+    color: #3b82f6;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 18px;
+}
+
+.hand-cards {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 16px;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-height: 160px;
+    align-items: center;
+}
+
+.hand-card {
+    width: 170px !important;
+    height: 220px !important;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border: 3px solid #92400e;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    padding: 12px !important;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    color: white;
+}
+
+.hand-card:hover {
+    transform: translateY(-8px) scale(1.05);
+    z-index: 20;
+    box-shadow: 0 8px 25px rgba(217, 119, 6, 0.5);
+}
+
+.hand-card.affordable {
+    border-color: #10b981;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.hand-card.expensive {
+    border-color: #ef4444;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    opacity: 0.7;
+}
+
+.hand-card .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.hand-card .card-name {
+    font-size: 14px !important;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.hand-card .card-cost {
+    background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
+    color: white;
+    border-radius: 50%;
+    width: 28px !important;
+    height: 28px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px !important;
+    font-weight: bold;
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.hand-card .card-type {
+    font-size: 12px !important;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.hand-card .card-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 8px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.hand-card .card-stats span {
+    font-size: 11px !important;
+    padding: 3px 8px !important;
+}
+
+.hand-card .card-effect {
+    font-size: 11px !important;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.hand-card .madness-threshold {
+    font-size: 9px;
+    color: #ec4899;
+    text-align: center;
+    margin-top: auto;
+}
+
+/* === TAILLES AMÉLIORÉES POUR LES CARTES === */
+/* Cartes en main plus grandes et plus lisibles */
+.hand-card {
+    width: 170px !important;
+    height: 220px !important;
+    font-size: 14px !important;
+    padding: 12px !important;
+}
+
+.hand-card .card-name {
+    font-size: 14px !important;
+    font-weight: bold;
+}
+
+.hand-card .card-cost {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 12px !important;
+}
+
+.hand-card .card-type {
+    font-size: 12px !important;
+}
+
+.hand-card .card-stats span {
+    font-size: 11px !important;
+    padding: 3px 8px !important;
+}
+
+.hand-card .card-effect {
+    font-size: 11px !important;
+}
+
+/* Cartes sur le terrain plus grandes */
+.field-card {
+    width: 150px !important;
+    height: 180px !important;
+    font-size: 14px !important;
+    padding: 10px !important;
+}
+
+.field-card .card-name {
+    font-size: 14px !important;
+    font-weight: bold;
+}
+
+.field-card .card-stats {
+    gap: 8px !important;
+    margin-bottom: 8px !important;
+}
+
+.field-card .card-stats .hp,
+.field-card .card-stats .attack,
+.field-card .card-stats .defense {
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+}
+
+/* Boutons d'attaque plus visibles */
+.unit-actions .btn {
+    font-size: 12px !important;
+    padding: 6px 12px !important;
+    margin-top: 8px !important;
+}
+
+/* Ajuster l'espacement de la main pour les cartes plus grandes */
+.hand-cards {
+    gap: 12px !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+}
+
+/* Ajuster l'espacement du terrain pour les cartes plus grandes */
+.field-grid {
+    gap: 16px !important;
+    justify-content: center !important;
+}
+
+/* Améliorer aussi les cartes ennemies */
+.enemies-grid > div {
+    width: 140px !important;
+    height: 160px !important;
+    font-size: 13px !important;
+    padding: 10px !important;
+}
+
+.enemy-name {
+    font-size: 13px !important;
+    font-weight: bold;
+    margin-bottom: 8px !important;
+}
+
+.enemy-stats .hp,
+.enemy-stats .attack {
+    font-size: 11px !important;
+    padding: 3px 6px !important;
+}
+
+/* Responsive : ajuster pour mobile */
+@media (max-width: 768px) {
+    .hand-card {
+        width: 140px !important;
+        height: 180px !important;
+        font-size: 12px !important;
+    }
+    
+    .field-card {
+        width: 120px !important;
+        height: 150px !important;
+        font-size: 12px !important;
+    }
+    
+    .enemies-grid > div {
+        width: 110px !important;
+        height: 140px !important;
+        font-size: 11px !important;
+    }
+}
+
+/* Styles pour les PV du joueur */
+.player-hp {
+    transition: all 0.3s ease;
+}
+
+.game-info .player-hp {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+.game-info .player-hp:hover {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+/* Animation d'alerte quand les PV sont bas */
+@keyframes lowHealthWarning {
+    0%, 100% { 
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+    50% { 
+        box-shadow: 0 4px 20px rgba(239, 68, 68, 0.8);
+        transform: scale(1.02);
+    }
+}
+
+/* Classe pour PV bas (sera ajoutée dynamiquement) */
+.low-health {
+    animation: lowHealthWarning 1.5s ease-in-out infinite;
+}
+
+/* Effets temporaires */
+.temporary-effects {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 2px 0;
+}
+
+.effect-badge {
+    font-size: 8px;
+    text-align: center;
+    border-radius: 6px;
+    padding: 2px 4px;
+    margin: 1px 0;
+    font-weight: bold;
+}
+
+.effect-rage-boost {
+    background: rgba(239, 68, 68, 0.9);
+    color: white;
+}
+
+.effect-arsenal {
+    background: rgba(251, 146, 60, 0.9);
+    color: white;
+}
+
+.effect-stun {
+    background: rgba(168, 85, 247, 0.9);
+    color: white;
+}
+
+.effect-invulnerable {
+    background: rgba(34, 197, 94, 0.9);
+    color: white;
+}
+
+.effect-poison {
+    background: rgba(132, 204, 22, 0.9);
+    color: white;
+}
+
+.effect-duration {
+    font-size: 7px;
+    opacity: 0.8;
+}
+
+/* Classes d'effets pour les cartes */
+.card.effect-rage-boost {
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
+    animation: pulseRed 2s ease-in-out infinite;
+}
+
+.card.effect-arsenal {
+    box-shadow: 0 0 15px rgba(251, 146, 60, 0.6);
+    border: 2px solid rgba(251, 146, 60, 0.8);
+}
+
+.card.effect-invulnerable {
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.6);
+    animation: pulseGreen 2s ease-in-out infinite;
+}
+
+/* Animations pour les effets */
+@keyframes pulseRed {
+    0%, 100% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
+    50% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.9); }
+}
+
+@keyframes pulseGreen {
+    0%, 100% { box-shadow: 0 0 15px rgba(34, 197, 94, 0.6); }
+    50% { box-shadow: 0 0 25px rgba(34, 197, 94, 0.9); }
+}

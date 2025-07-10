@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: endless-madness
+    runtime: node
+    plan: free
+    region: oregon
+    repo: https://github.com/votre-username/endless-madness.git # Remplacez par votre repo GitHub
+    branch: main
+    buildCommand: npm install && npm run build:prod
+    staticPublishPath: ./dist
+    headers:
+      - path: /*
+        name: X-Robots-Tag
+        value: index
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

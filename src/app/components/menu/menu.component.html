@@ -1,0 +1,61 @@
+<div class="menu-container">
+  <header class="menu-header">
+    <h1 class="game-title">🎴 Endless Madness</h1>
+    <p class="game-subtitle">Un jeu de cartes tactique roguelike</p>
+  </header>
+
+  <main class="menu-content">
+    <div class="menu-buttons" *ngIf="!showFloorSelection">
+      <button (click)="startGame()" class="menu-btn primary">
+        🎮 Commencer une partie
+      </button>
+      
+      <button (click)="openDeckBuilder()" class="menu-btn">
+        🔧 Construire un deck
+      </button>
+      
+      <button (click)="openCollection()" class="menu-btn">
+        📚 Ma collection
+      </button>
+      
+      <button (click)="openShop()" class="menu-btn">
+        🛒 Boutique de cartes
+      </button>
+      
+      <!-- Bouton de test temporaire -->
+      <button (click)="unlockTestFloors()" class="menu-btn test" style="background: #ff6b35; color: white;">
+        🔓 [TEST] Débloquer étages 1-5
+      </button>
+    </div>
+
+    <!-- Sélection d'étage -->
+    <div class="floor-selection" *ngIf="showFloorSelection">
+      <h2>🏗️ Choisissez votre étage</h2>
+      <p>Vous avez débloqué {{ availableFloors.length }} étage(s)</p>
+      
+      <div class="floor-grid">
+        <button *ngFor="let floor of availableFloors" 
+                (click)="startGameWithFloor(floor)"
+                class="floor-btn">
+          <div class="floor-number">{{ floor }}</div>
+          <div class="floor-label">Étage {{ floor }}</div>
+        </button>
+      </div>
+      
+      <button (click)="cancelFloorSelection()" class="menu-btn cancel">
+        ❌ Annuler
+      </button>
+    </div>
+
+    <div class="game-info">
+      <h3>Comment jouer :</h3>
+      <ul>
+        <li>🏗️ Construisez votre deck de 20-30 cartes</li>
+        <li>⚔️ Affrontez les étages de la tour infinie</li>
+        <li>🤯 Vos unités deviennent folles si elles survivent trop longtemps</li>
+        <li>💰 Gagnez de l'or pour acheter de nouvelles cartes</li>
+        <li>🎯 Chaque étage contient plusieurs vagues d'ennemis</li>
+      </ul>
+    </div>
+  </main>
+</div>

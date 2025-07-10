@@ -1,0 +1,117 @@
+<div class="deck-builder-container">
+  <header class="deck-builder-header">
+    <h1>🔧 Constructeur de Deck</h1>
+    <div class="deck-stats">
+      <span>Cartes: {{ currentDeck.length }}/30</span>
+      <span>Coût moyen: {{ getDeckCost().average }}</span>
+      <span [class.valid]="currentDeck.length >= 20" [class.invalid]="currentDeck.length < 20">
+        {{ currentDeck.length >= 20 ? 'Deck valide' : 'Minimum 20 cartes' }}
+      </span>
+    </div>
+  </header>
+
+  <div class="deck-builder-content">
+    <!-- Collection disponible -->
+    <section class="collection-section">
+      <div class="section-header">
+        <h2>Collection disponible</h2>
+        <button (click)="refreshData()" class="btn btn-refresh">🔄 Actualiser</button>
+      </div>
+      <div class="collection-grid">
+        <div *ngFor="let item of getUniqueCollectionCards()" 
+             class="collection-card"
+             [class.maxed-out]="!canAddCard(item.card.id)">
+          <div class="card-header">
+            <span class="card-name">{{ item.card.name }}</span>
+            <div class="card-counts">
+              <span class="in-deck">{{ item.inDeck }}</span>
+              <span class="divider">/</span>
+              <span class="available">{{ item.available }}</span>
+            </div>
+          </div>
+          
+          <div class="card-type-badge">{{ item.card.type }}</div>
+          
+          <div class="card-stats" *ngIf="item.card.type === 'unit'">
+            <span class="stat hp">{{ item.card.hp }} PV</span>
+            <span class="stat attack">{{ item.card.attack }} ATK</span>
+          </div>
+          
+          <div class="card-cost">{{ item.card.cost }} mana</div>
+          
+          <div class="card-effect" *ngIf="item.card.effect">{{ item.card.effect }}</div>
+          
+          <div class="card-actions">
+            <button (click)="removeCardFromDeck(item.card.id)" 
+                    [disabled]="!canRemoveCard(item.card.id)"
+                    class="btn btn-remove">-</button>
+            <button (click)="addCardToDeck(item.card.id)" 
+                    [disabled]="!canAddCard(item.card.id)"
+                    class="btn btn-add">+</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Deck actuel -->
+    <section class="deck-section">
+      <h2>Deck actuel ({{ currentDeck.length }} cartes)</h2>
+      
+      <div class="deck-summary" *ngIf="currentDeck.length > 0">
+        <div class="cost-distribution">
+          <h4>Répartition des coûts:</h4>
+          <div class="cost-bars">
+            <div *ngFor="let cost of [0,1,2,3,4,5,6,7,8,9,10]" class="cost-bar">
+              <span class="cost-label">{{ cost }}</span>
+              <div class="bar-container">
+                <div class="bar" 
+                     [style.width.%]="(getCardsWithCost(cost).length / currentDeck.length) * 100">
+                </div>
+              </div>
+              <span class="cost-count">{{ getCardsWithCost(cost).length }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="type-distribution">
+          <h4>Types de cartes:</h4>
+          <div class="type-stats">
+            <div class="type-stat">
+              <span>Unités:</span>
+              <span>{{ getCardsByType('unit').length }}</span>
+            </div>
+            <div class="type-stat">
+              <span>Sorts:</span>
+              <span>{{ getCardsByType('spell').length }}</span>
+            </div>
+            <div class="type-stat">
+              <span>Compétences:</span>
+              <span>{{ getCardsByType('skill').length }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="deck-list" *ngIf="currentDeck.length > 0">
+        <div *ngFor="let item of getUniqueDeckCards()" class="deck-card">
+          <span class="card-count">{{ item.count }}x</span>
+          <span class="card-name">{{ item.card.name }}</span>
+          <span class="card-cost">{{ item.card.cost }}</span>
+          <button (click)="removeCardFromDeck(item.card.id)" class="btn btn-remove">-</button>
+        </div>
+      </div>
+      
+      <div *ngIf="currentDeck.length === 0" class="empty-deck">
+        <p>Votre deck est vide. Ajoutez des cartes depuis votre collection!</p>
+      </div>
+    </section>
+  </div>
+
+  <footer class="deck-builder-footer">
+    <button (click)="resetDeck()" class="btn btn-danger">🗑️ Vider le deck</button>
+    <button (click)="saveDeck()" 
+            [disabled]="currentDeck.length < 20"
+            class="btn btn-primary">💾 Sauvegarder le deck</button>
+    <button (click)="goBack()" class="btn btn-secondary">← Retour au menu</button>
+  </footer>
+</div>

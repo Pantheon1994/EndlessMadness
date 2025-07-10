@@ -1,0 +1,149 @@
+<div class="game-container" *ngIf="gameState$ | async as gameState">
+  <!-- En-tête du jeu -->
+  <header class="game-header">
+    <div class="game-info">
+      <span>Étage: {{ gameState.currentFloor }}</span>
+      <span>Vague: {{ gameState.currentWave }}/{{ gameState.totalWavesInFloor }}</span>
+      <span>Mana: {{ gameState.mana }}/{{ gameState.maxMana }}</span>
+      <span class="player-hp" [class.low-health]="isPlayerHealthLow(gameState)">❤️ PV: {{ gameState.playerHp }}/{{ gameState.maxPlayerHp }}</span>
+      <span>Or: {{ currentGold }}</span>
+    </div>
+  </header>
+
+  <!-- Zone de combat -->
+  <main class="battle-area">
+    <!-- Ennemis -->
+    <section class="enemies-section">
+      <h3>Ennemis</h3>
+      <div class="enemies-grid">
+        <div *ngFor="let enemy of gameState.enemies; let i = index" 
+             [class]="getEnemyClass(enemy)"
+             [class.targetable]="isEnemyTargetable(enemy)"
+             [class.spell-target]="awaitingTarget && isEnemyTargetable(enemy)"
+             [class.attack-target]="awaitingAttackTarget && isEnemyTargetable(enemy)"
+             (click)="isEnemyTargetable(enemy) ? selectEnemyTarget(i) : null">
+          <!-- Bulles de stats pour les ennemis -->
+          <div class="stat-bubble hp-bubble">{{ enemy.currentHp }}/{{ enemy.hp }}</div>
+          <div class="stat-bubble attack-bubble">{{ enemy.attack }}</div>
+          
+          <div class="enemy-name">{{ enemy.name }}</div>
+          <div class="enemy-effect" *ngIf="enemy.effect">{{ enemy.effect }}</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Terrain du joueur -->
+    <section class="player-field">
+      <h3>Terrain ({{ gameState.cardsInPlay.length }}/{{ gameState.maxSlots }})</h3>
+      <div class="field-grid">
+        <div *ngFor="let card of gameState.cardsInPlay; let i = index" 
+             [class]="getCardClass(card)"
+             [class.targetable]="isTargetable(card)"
+             [class.can-attack]="canUnitAttack(i)"
+             [class.awaiting-attack]="awaitingAttackTarget?.unitIndex === i"
+             (click)="isTargetable(card) ? selectCardTarget(i) : null"
+             class="field-card">
+          <!-- Bulles de stats -->
+          <div class="stat-bubble hp-bubble" *ngIf="card.type === 'unit'">{{ card.currentHp }}/{{ card.hp }}</div>
+          <div class="stat-bubble attack-bubble" *ngIf="card.type === 'unit'">{{ card.attack }}</div>
+          <div class="stat-bubble defense-bubble" *ngIf="card.type === 'unit' && card.currentDefense !== undefined && card.currentDefense > 0">{{ card.currentDefense }}</div>
+          
+          <div class="card-name">{{ card.name }}</div>
+          
+          <!-- Affichage des effets temporaires -->
+          <div class="temporary-effects" *ngIf="card.temporaryEffects && card.temporaryEffects.length > 0">
+            <div class="effect-badge" *ngFor="let effect of card.temporaryEffects" 
+                 [class]="'effect-' + effect.type">
+              {{ effect.description }}
+              <span class="effect-duration" *ngIf="effect.duration > 0">({{ effect.duration }})</span>
+            </div>
+          </div>
+          
+          <!-- Bouton d'attaque pour chaque unité -->
+          <div class="unit-actions" *ngIf="card.type === 'unit' && gameState.gamePhase === 'player'">
+            <button (click)="attackWithUnit(i)" 
+                    [disabled]="!canUnitAttack(i)"
+                    [class.can-attack]="canUnitAttack(i)"
+                    class="btn btn-attack">
+              {{ canUnitAttack(i) ? '⚔️ Attaquer' : '❌ Déjà attaqué' }}
+            </button>
+          </div>
+        </div>
+        
+        <!-- Slots vides -->
+        <div *ngFor="let slot of [].constructor(gameState.maxSlots - gameState.cardsInPlay.length)" 
+             class="empty-slot">
+          Slot libre
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Main du joueur -->
+  <section class="player-hand" *ngIf="gameState.gamePhase === 'player'">
+    <h3>Main</h3>
+    <div class="hand-cards">
+      <div *ngFor="let card of gameState.playerHand; let i = index" 
+           class="hand-card"
+           [class.affordable]="card.cost <= gameState.mana"
+           [class.expensive]="card.cost > gameState.mana"
+           (click)="playCard(i)">
+        <!-- Bulles de stats pour les cartes en main -->
+        <div class="stat-bubble hp-bubble" *ngIf="card.type === 'unit'">{{ card.hp }}</div>
+        <div class="stat-bubble attack-bubble" *ngIf="card.type === 'unit'">{{ card.attack }}</div>
+        <div class="stat-bubble defense-bubble" *ngIf="card.type === 'unit' && card.defense !== undefined && card.defense > 0">{{ card.defense }}</div>
+        <div class="stat-bubble mana-bubble">{{ card.cost }}</div>
+        
+        <div class="card-header">
+          <span class="card-name">{{ card.name }}</span>
+        </div>
+        <div class="card-type">{{ card.type }}</div>
+        <div class="card-effect" *ngIf="card.effect">{{ card.effect }}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contrôles -->
+  <footer class="game-controls">
+    <!-- Messages d'aide pour la sélection de cible -->
+    <div *ngIf="awaitingTarget" class="target-selection mobile-overlay">
+      <div class="target-message">
+        <h3>🎯 Sélection de cible</h3>
+        <p>Touchez une cible pour <strong>{{ awaitingTarget.card.name }}</strong></p>
+        <button (click)="cancelTargetSelection()" class="btn btn-cancel">❌ Annuler</button>
+      </div>
+    </div>
+    
+    <div *ngIf="awaitingAttackTarget" class="attack-selection mobile-overlay">
+      <div class="target-message">
+        <h3>⚔️ Sélection d'attaque</h3>
+        <p>Touchez un ennemi à attaquer</p>
+        <button (click)="cancelAttackSelection()" class="btn btn-cancel">❌ Annuler</button>
+      </div>
+    </div>
+    
+    <div *ngIf="gameState.gamePhase === 'player' && !awaitingTarget && !awaitingAttackTarget" class="player-controls">
+      <button (click)="endTurn()" class="btn btn-primary btn-large">🔄 Finir le tour</button>
+    </div>
+    
+    <div *ngIf="gameState.gamePhase === 'enemy'" class="enemy-turn">
+      <h3>⏳ Tour des ennemis...</h3>
+      <p>Les ennemis attaquent vos unités</p>
+    </div>
+    
+    <div *ngIf="gameState.gamePhase === 'victory'" class="victory-screen">
+      <h2>🎉 Étage {{ gameState.currentFloor }} terminé!</h2>
+      <p>Vous avez gagné de l'or! Étage suivant débloqué.</p>
+      <div class="victory-buttons">
+        <button (click)="nextFloor()" class="btn btn-primary btn-large">🔼 Étage suivant</button>
+        <button (click)="returnToMenu()" class="btn btn-secondary btn-large">🏠 Retour au menu</button>
+      </div>
+    </div>
+    
+    <div *ngIf="gameState.gamePhase === 'defeat'" class="defeat-screen">
+      <h2>💀 Défaite!</h2>
+      <p>Toutes vos unités ont été détruites à l'étage {{ gameState.currentFloor }}.</p>
+      <button (click)="returnToMenu()" class="btn btn-primary btn-large">🏠 Retour au menu</button>
+    </div>
+  </footer>
+</div>

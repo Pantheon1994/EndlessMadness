@@ -1,0 +1,69 @@
+<div class="collection-container">
+  <header class="collection-header">
+    <h1>📚 Ma Collection</h1>
+    <div class="collection-info">
+      <div class="collection-stats">
+        <span>Cartes uniques: {{ getUniqueCards().length }}</span>
+        <span>Total de cartes: {{ collection.length }}</span>
+      </div>
+      <span class="gold-display">💰 Or: {{ currentGold }}</span>
+    </div>
+  </header>
+
+  <main class="collection-content">
+    <div class="collection-grid" *ngIf="getUniqueCards().length > 0">
+      <div *ngFor="let item of getUniqueCards()" class="collection-card">
+        <div class="card-count-badge">{{ item.count }}x</div>
+        
+        <div class="card-header">
+          <span class="card-name">{{ item.card.name }}</span>
+        </div>
+        
+        <div class="card-type-badge">{{ item.card.type }}</div>
+        
+        <div class="card-stats" *ngIf="item.card.type === 'unit'">
+          <div class="stat">
+            <span class="stat-label">PV:</span>
+            <span class="stat-value hp">{{ item.card.hp }}</span>
+          </div>
+          <div class="stat" *ngIf="item.card.defense">
+            <span class="stat-label">DEF:</span>
+            <span class="stat-value defense">{{ item.card.defense }}</span>
+          </div>
+        </div>
+        
+        <div class="card-cost">
+          <span>Coût: {{ item.card.cost }} mana</span>
+        </div>
+        
+        <div class="card-effect" *ngIf="item.card.effect">
+          <strong>Effet:</strong> {{ item.card.effect }}
+        </div>
+
+        <div class="card-actions">
+          <div class="sell-info">
+            <span class="sell-price">Vendre: {{ getSellPrice(item.card.id) }} 💰</span>
+            <small>(65% du prix d'achat)</small>
+          </div>
+          <button (click)="sellCard(item.card.id)" 
+                  [disabled]="item.count <= 0"
+                  class="btn btn-sell">
+            🔥 Vendre une carte
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="getUniqueCards().length === 0" class="empty-collection">
+      <h3>Collection vide!</h3>
+      <p>Vous n'avez encore aucune carte.</p>
+      <p>Visitez la boutique pour commencer votre collection!</p>
+    </div>
+  </main>
+
+  <footer class="collection-footer">
+    <button (click)="goToShop()" class="btn btn-primary">🛒 Aller à la boutique</button>
+    <button (click)="goToDeckBuilder()" class="btn btn-secondary">🔧 Construire un deck</button>
+    <button (click)="goBack()" class="btn btn-primary">← Retour au menu</button>
+  </footer>
+</div>

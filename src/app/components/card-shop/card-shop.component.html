@@ -1,0 +1,96 @@
+<div class="shop-container">
+  <header class="shop-header">
+    <h1>🛒 Boutique de Cartes</h1>
+    <div class="shop-info">
+      <span class="gold-display">💰 Or: {{ currentGold }}</span>
+      <div class="shop-tabs">
+        <button (click)="switchTab('daily')" 
+                [class.active]="activeTab === 'daily'"
+                class="tab-btn">🏪 Marché Quotidien</button>
+        <button (click)="switchTab('packs')" 
+                [class.active]="activeTab === 'packs'"
+                class="tab-btn">📦 Packs Aléatoires</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Boutique Aléatoire -->
+  <!-- Marché Quotidien -->
+  <main class="shop-content" *ngIf="activeTab === 'daily' && dailyMarket">
+    <div class="shop-section-header">
+      <h2>Marché Quotidien</h2>
+      <p>Sélection du jour - Premier arrivé, premier servi!</p>
+      <small>Renouvellement automatique à minuit</small>
+    </div>
+
+    <div class="shop-grid">
+      <div *ngFor="let marketCard of dailyMarket.cards" 
+           class="shop-card market-card"
+           [class.affordable]="canAffordMarket(marketCard)"
+           [class.expensive]="!canAffordMarket(marketCard)"
+           [class.sold-out]="marketCard.sold >= marketCard.quantity">
+        
+        <div class="market-stock">
+          {{ marketCard.quantity - marketCard.sold }}/{{ marketCard.quantity }}
+        </div>
+
+        <ng-container *ngIf="getCardInfo(marketCard.cardId) as card">
+          <div class="card-header">
+            <span class="card-name">{{ card.name }}</span>
+            <span class="card-price">{{ marketCard.price }} 💰</span>
+          </div>
+          
+          <div class="card-type-badge">{{ card.type }}</div>
+          
+          <div class="card-stats" *ngIf="card.type === 'unit'">
+            <div class="stat">
+              <span class="stat-label">PV:</span>
+              <span class="stat-value hp">{{ card.hp }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">ATK:</span>
+              <span class="stat-value attack">{{ card.attack }}</span>
+            </div>
+            <div class="stat" *ngIf="card.defense">
+              <span class="stat-label">DEF:</span>
+              <span class="stat-value defense">{{ card.defense }}</span>
+            </div>
+          </div>
+          
+          <div class="card-cost">
+            <span>Coût: {{ card.cost }} mana</span>
+          </div>
+          
+          <div class="card-effect" *ngIf="card.effect">
+            <strong>Effet:</strong> {{ card.effect }}
+          </div>
+        </ng-container>
+        
+        <button (click)="buyMarketCard(marketCard)" 
+                [disabled]="!canAffordMarket(marketCard)"
+                class="buy-btn"
+                [class.affordable-btn]="canAffordMarket(marketCard)"
+                [class.expensive-btn]="!canAffordMarket(marketCard)"
+                [class.sold-out-btn]="marketCard.sold >= marketCard.quantity">
+          {{ marketCard.sold >= marketCard.quantity ? 'Épuisé' : 
+             (canAffordMarket(marketCard) ? 'Acheter' : 'Pas assez d\'or') }}
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Packs Aléatoires -->
+  <main class="shop-content" *ngIf="activeTab === 'packs'">
+    <div class="shop-section-header">
+      <h2>📦 Packs Aléatoires</h2>
+      <p>Tentez votre chance avec des packs de cartes mystère!</p>
+    </div>
+
+    <app-random-pack></app-random-pack>
+  </main>
+
+  <footer class="shop-footer">
+    <button (click)="goToCollection()" class="btn btn-secondary">📚 Voir ma collection</button>
+    <button (click)="goBack()" class="btn btn-primary">← Retour au menu</button>
+  </footer>
+</div>

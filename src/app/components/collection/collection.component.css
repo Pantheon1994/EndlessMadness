@@ -1,0 +1,338 @@
+.collection-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.collection-header {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.collection-header h1 {
+  margin: 0;
+  color: #333;
+  font-size: 2em;
+}
+
+.collection-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-weight: bold;
+  color: #555;
+}
+
+.collection-content {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  min-height: 400px;
+}
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.collection-card {
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.collection-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.collection-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  border-color: #667eea;
+}
+
+.card-count-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  color: white;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.card-header {
+  margin-bottom: 15px;
+  padding-right: 50px; /* Space for count badge */
+}
+
+.card-name {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #333;
+}
+
+.card-type-badge {
+  display: inline-block;
+  background: #6c757d;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.9em;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+.card-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.stat {
+  background: #f8f9fa;
+  padding: 8px;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.8em;
+  color: #666;
+  margin-bottom: 2px;
+}
+
+.stat-value {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.stat-value.hp {
+  color: #e74c3c;
+}
+
+.stat-value.attack {
+  color: #f39c12;
+}
+
+.card-cost {
+  background: #e3f2fd;
+  padding: 8px;
+  border-radius: 6px;
+  text-align: center;
+  margin-bottom: 15px;
+  color: #1976d2;
+  font-weight: bold;
+}
+
+.card-effect {
+  background: #f0f8ff;
+  padding: 10px;
+  border-radius: 6px;
+  border-left: 4px solid #007bff;
+  margin-bottom: 15px;
+  font-size: 0.95em;
+  line-height: 1.4;
+}
+
+.madness-info {
+  background: #fef7e0;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  padding: 12px;
+}
+
+.madness-threshold {
+  font-weight: bold;
+  color: #856404;
+  margin-bottom: 8px;
+}
+
+.madness-effects {
+  font-size: 0.9em;
+}
+
+.bonus {
+  color: #155724;
+  margin-bottom: 4px;
+}
+
+.drawback {
+  color: #721c24;
+}
+
+.empty-collection {
+  text-align: center;
+  padding: 80px 20px;
+  color: #666;
+}
+
+.empty-collection h3 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.empty-collection p {
+  font-size: 1.1em;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.collection-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+  min-width: 150px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #545b62;
+  transform: translateY(-2px);
+}
+
+.collection-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.gold-display {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #f39c12;
+  background: rgba(243, 156, 18, 0.1);
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: 2px solid #f39c12;
+}
+
+.defense {
+  color: #17a2b8;
+}
+
+.card-actions {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e9ecef;
+}
+
+.sell-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.sell-price {
+  font-weight: bold;
+  color: #28a745;
+  font-size: 1.1em;
+}
+
+.sell-info small {
+  color: #666;
+  font-size: 0.8em;
+}
+
+.btn-sell {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.btn-sell:hover {
+  background: linear-gradient(135deg, #c82333 0%, #a71e2a 100%);
+  transform: translateY(-1px);
+}
+
+.btn-sell:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .collection-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .collection-stats {
+    flex-direction: row;
+    gap: 20px;
+  }
+  
+  .collection-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .collection-footer {
+    flex-direction: column;
+  }
+}
