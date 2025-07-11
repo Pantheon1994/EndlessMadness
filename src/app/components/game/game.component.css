@@ -167,6 +167,56 @@
     font-weight: bold;
 }
 
+/* Capacités spéciales des ennemis */
+.enemy-special-ability {
+    margin-top: 4px;
+    text-align: center;
+}
+
+.special-ability-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 8px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    box-shadow: 0 1px 3px rgba(139, 92, 246, 0.3);
+}
+
+.ability-armor-break {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 1px 3px rgba(245, 158, 11, 0.3);
+}
+
+.ability-heal-allies {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3);
+}
+
+/* Effets temporaires pour les ennemis */
+.enemies-grid .temporary-effects {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: center;
+}
+
+.enemies-grid .effect-badge {
+    display: inline-block;
+    padding: 1px 4px;
+    border-radius: 6px;
+    font-size: 7px;
+    font-weight: bold;
+    text-align: center;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* Section du terrain du joueur */
 .player-field {
     margin-bottom: 20px;
@@ -220,6 +270,29 @@
     border-color: #ec4899;
     background: linear-gradient(135deg, #be185d 0%, #ec4899 100%);
     animation: madnessEffect 2s ease-in-out infinite;
+}
+
+/* Style spécial pour les cartes avec l'effet Provoque */
+.field-card.has-taunt {
+    border-color: #f59e0b;
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+    animation: tauntGlow 2s ease-in-out infinite;
+}
+
+.field-card.has-taunt .card-effect {
+    color: #fef3c7;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+@keyframes tauntGlow {
+    0%, 100% { 
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+    }
+    50% { 
+        box-shadow: 0 0 30px rgba(245, 158, 11, 0.9);
+    }
 }
 
 .field-card:hover {
@@ -1135,6 +1208,56 @@
     font-weight: bold;
 }
 
+/* Capacités spéciales des ennemis */
+.enemy-special-ability {
+    margin-top: 4px;
+    text-align: center;
+}
+
+.special-ability-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 8px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+    box-shadow: 0 1px 3px rgba(139, 92, 246, 0.3);
+}
+
+.ability-armor-break {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    box-shadow: 0 1px 3px rgba(245, 158, 11, 0.3);
+}
+
+.ability-heal-allies {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3);
+}
+
+/* Effets temporaires pour les ennemis */
+.enemies-grid .temporary-effects {
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: center;
+}
+
+.enemies-grid .effect-badge {
+    display: inline-block;
+    padding: 1px 4px;
+    border-radius: 6px;
+    font-size: 7px;
+    font-weight: bold;
+    text-align: center;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* Section du terrain du joueur */
 .player-field {
     margin-bottom: 20px;
@@ -1188,6 +1311,29 @@
     border-color: #ec4899;
     background: linear-gradient(135deg, #be185d 0%, #ec4899 100%);
     animation: madnessEffect 2s ease-in-out infinite;
+}
+
+/* Style spécial pour les cartes avec l'effet Provoque */
+.field-card.has-taunt {
+    border-color: #f59e0b;
+    background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+    animation: tauntGlow 2s ease-in-out infinite;
+}
+
+.field-card.has-taunt .card-effect {
+    color: #fef3c7;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+@keyframes tauntGlow {
+    0%, 100% { 
+        box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+    }
+    50% { 
+        box-shadow: 0 0 30px rgba(245, 158, 11, 0.9);
+    }
 }
 
 .field-card:hover {
@@ -1409,289 +1555,256 @@
     margin-top: auto;
 }
 
-/* === TAILLES AMÉLIORÉES POUR LES CARTES === */
-/* Cartes en main plus grandes et plus lisibles */
-.hand-card {
-    width: 170px !important;
-    height: 220px !important;
-    font-size: 14px !important;
-    padding: 12px !important;
-}
-
-.hand-card .card-name {
-    font-size: 14px !important;
-    font-weight: bold;
-}
-
-.hand-card .card-cost {
-    width: 28px !important;
-    height: 28px !important;
-    font-size: 12px !important;
-}
-
-.hand-card .card-type {
-    font-size: 12px !important;
-}
-
-.hand-card .card-stats span {
-    font-size: 11px !important;
-    padding: 3px 8px !important;
-}
-
-.hand-card .card-effect {
-    font-size: 11px !important;
-}
-
-/* Cartes sur le terrain plus grandes */
-.field-card {
-    width: 150px !important;
-    height: 180px !important;
-    font-size: 14px !important;
-    padding: 10px !important;
-}
-
-.field-card .card-name {
-    font-size: 14px !important;
-    font-weight: bold;
-}
-
-.field-card .card-stats {
-    gap: 8px !important;
-    margin-bottom: 8px !important;
-}
-
-.field-card .card-stats .hp,
-.field-card .card-stats .attack,
-.field-card .card-stats .defense {
-    font-size: 11px !important;
-    padding: 4px 8px !important;
-}
-
-/* Boutons d'attaque plus visibles */
-.unit-actions .btn {
-    font-size: 12px !important;
-    padding: 6px 12px !important;
-    margin-top: 8px !important;
-}
-
-/* Ajuster l'espacement de la main pour les cartes plus grandes */
-.hand-cards {
-    gap: 12px !important;
-    justify-content: center !important;
-    flex-wrap: wrap !important;
-}
-
-/* Ajuster l'espacement du terrain pour les cartes plus grandes */
-.field-grid {
-    gap: 16px !important;
-    justify-content: center !important;
-}
-
-/* Améliorer aussi les cartes ennemies */
-.enemies-grid > div {
-    width: 140px !important;
-    height: 160px !important;
-    font-size: 13px !important;
-    padding: 10px !important;
-}
-
-.enemy-name {
-    font-size: 13px !important;
-    font-weight: bold;
-    margin-bottom: 8px !important;
-}
-
-.enemy-stats .hp,
-.enemy-stats .attack {
-    font-size: 11px !important;
-    padding: 3px 6px !important;
-}
-
-/* Responsive : ajuster pour mobile */
-@media (max-width: 768px) {
-    .hand-card {
-        width: 140px !important;
-        height: 180px !important;
-        font-size: 12px !important;
-    }
-    
-    .field-card {
-        width: 120px !important;
-        height: 150px !important;
-        font-size: 12px !important;
-    }
-    
-    .enemies-grid > div {
-        width: 110px !important;
-        height: 140px !important;
-        font-size: 11px !important;
-    }
-}
-
-/* Styles pour les PV du joueur */
-.player-hp {
-    transition: all 0.3s ease;
-}
-
-.game-info .player-hp {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
-    color: white !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-}
-
-.game-info .player-hp:hover {
-    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-}
-
-/* Animation d'alerte quand les PV sont bas */
-@keyframes lowHealthWarning {
-    0%, 100% { 
-        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-    }
-    50% { 
-        box-shadow: 0 4px 20px rgba(239, 68, 68, 0.8);
-        transform: scale(1.02);
-    }
-}
-
-/* Classe pour PV bas (sera ajoutée dynamiquement) */
-.low-health {
-    animation: lowHealthWarning 1.5s ease-in-out infinite;
-}
-
-/* Effets temporaires */
-.temporary-effects {
+/* === NOTIFICATIONS === */
+.notifications-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1000;
     display: flex;
     flex-direction: column;
-    gap: 2px;
-    margin: 2px 0;
+    gap: 8px;
+    max-width: 300px;
 }
 
-.effect-badge {
-    font-size: 8px;
-    text-align: center;
-    border-radius: 6px;
-    padding: 2px 4px;
-    margin: 1px 0;
-    font-weight: bold;
-}
-
-.effect-rage-boost {
-    background: rgba(239, 68, 68, 0.9);
+.notification {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
-}
-
-.effect-arsenal {
-    background: rgba(251, 146, 60, 0.9);
-    color: white;
-}
-
-.effect-stun {
-    background: rgba(168, 85, 247, 0.9);
-    color: white;
-}
-
-.effect-invulnerable {
-    background: rgba(34, 197, 94, 0.9);
-    color: white;
-}
-
-.effect-poison {
-    background: rgba(132, 204, 22, 0.9);
-    color: white;
-}
-
-.effect-duration {
-    font-size: 7px;
-    opacity: 0.8;
-}
-
-/* Classes d'effets pour les cartes */
-.card.effect-rage-boost {
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.6);
-    animation: pulseRed 2s ease-in-out infinite;
-}
-
-.card.effect-arsenal {
-    box-shadow: 0 0 15px rgba(251, 146, 60, 0.6);
-    border: 2px solid rgba(251, 146, 60, 0.8);
-}
-
-.card.effect-invulnerable {
-    box-shadow: 0 0 15px rgba(34, 197, 94, 0.6);
-    animation: pulseGreen 2s ease-in-out infinite;
-}
-
-/* Animations pour les effets */
-@keyframes pulseRed {
-    0%, 100% { box-shadow: 0 0 15px rgba(239, 68, 68, 0.6); }
-    50% { box-shadow: 0 0 25px rgba(239, 68, 68, 0.9); }
-}
-
-@keyframes pulseGreen {
-    0%, 100% { box-shadow: 0 0 15px rgba(34, 197, 94, 0.6); }
-    50% { box-shadow: 0 0 25px rgba(34, 197, 94, 0.9); }
-}
-
-/* Styles pour les nouveaux nombres d'effet */
-.stun-number {
-    position: absolute;
-    z-index: 1000;
-    color: #8b5cf6;
-    font-weight: bold;
+    padding: 12px 16px;
+    border-radius: 8px;
     font-size: 14px;
-    animation: effectNumber 1s ease-out forwards;
-    pointer-events: none;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    animation: slideInRight 0.3s ease-out, fadeOut 0.5s ease-in 2.5s forwards;
+    transform: translateX(0);
 }
 
-.poison-number {
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+    .notifications-container {
+        top: 60px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+    
+    .notification {
+        font-size: 12px;
+        padding: 10px 12px;
+    }
+}
+
+/* === ANIMATIONS D'ATTAQUE === */
+.attack-animations {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 500;
+}
+
+.attack-line {
     position: absolute;
-    z-index: 1000;
-    color: #84cc16;
-    font-weight: bold;
-    font-size: 14px;
-    animation: effectNumber 1s ease-out forwards;
-    pointer-events: none;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        #ff4444 20%, 
+        #ff6666 50%, 
+        #ff4444 80%, 
+        transparent 100%);
+    height: 4px;
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(255, 68, 68, 0.8);
+    animation: attackFlash 0.8s ease-out;
+    transform-origin: left center;
 }
 
-/* Styles pour les nombres de dégâts et de soins */
-.damage-number {
+@keyframes attackFlash {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    20% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    80% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes attackFlash {
+    0% {
+        opacity: 0;
+        transform: scaleX(0) rotate(var(--attack-angle, 0deg));
+    }
+    20% {
+        opacity: 1;
+        transform: scaleX(0.3) rotate(var(--attack-angle, 0deg));
+    }
+    50% {
+        opacity: 1;
+        transform: scaleX(1) rotate(var(--attack-angle, 0deg));
+    }
+    80% {
+        opacity: 0.8;
+        transform: scaleX(1) rotate(var(--attack-angle, 0deg));
+    }
+    100% {
+        opacity: 0;
+        transform: scaleX(1) rotate(var(--attack-angle, 0deg));
+    }
+}
+
+/* === BULLES DE DÉGÂTS FLOTTANTES === */
+.damage-floaters {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1000;
+}
+
+.damage-floater {
     position: absolute;
-    z-index: 1000;
-    color: #ef4444;
+    font-size: 24px;
     font-weight: bold;
-    font-size: 16px;
-    animation: effectNumber 1s ease-out forwards;
-    pointer-events: none;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    color: #ff4444;
+    text-shadow: 
+        2px 2px 0 #fff,
+        -2px -2px 0 #fff,
+        2px -2px 0 #fff,
+        -2px 2px 0 #fff,
+        0 0 8px rgba(255, 68, 68, 0.8);
+    animation: damageFloat 1.5s ease-out forwards;
+    z-index: 1001;
+    transform: translate(-50%, -50%); /* Centrer la bulle sur le point de coordonnée */
 }
 
-.heal-number {
-    position: absolute;
-    z-index: 1000;
-    color: #10b981;
-    font-weight: bold;
-    font-size: 16px;
-    animation: effectNumber 1s ease-out forwards;
-    pointer-events: none;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
-}
-
-@keyframes effectNumber {
+@keyframes damageFloat {
     0% {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+    20% {
+        opacity: 1;
+        transform: translateY(-10px) scale(1.2);
+    }
     50% {
         opacity: 1;
-        transform: translateY(-20px) scale(1.2);
+        transform: translateY(-30px) scale(1.1);
+    }
+    80% {
+        opacity: 0.7;
+        transform: translateY(-50px) scale(1);
     }
     100% {
         opacity: 0;
-        transform: translateY(-40px) scale(0.8);
+        transform: translateY(-80px) scale(0.8);
+    }
+}
+
+/* Variantes de couleur pour différents types de dégâts */
+.damage-floater.critical {
+    color: #ff6b35;
+    font-size: 28px;
+    text-shadow: 
+        2px 2px 0 #fff,
+        -2px -2px 0 #fff,
+        2px -2px 0 #fff,
+        -2px 2px 0 #fff,
+        0 0 12px rgba(255, 107, 53, 1);
+}
+
+.damage-floater.healing {
+    color: #10b981;
+    text-shadow: 
+        2px 2px 0 #fff,
+        -2px -2px 0 #fff,
+        2px -2px 0 #fff,
+        -2px 2px 0 #fff,
+        0 0 8px rgba(16, 185, 129, 0.8);
+}
+
+/* Animation de flash pour les cibles attaquées */
+.enemy.being-attacked,
+.field-card.being-attacked {
+    animation: hitFlash 0.6s ease-out;
+}
+
+@keyframes hitFlash {
+    0% { background-color: transparent; }
+    20% { background-color: rgba(255, 68, 68, 0.3); }
+    40% { background-color: rgba(255, 68, 68, 0.6); }
+    60% { background-color: rgba(255, 68, 68, 0.3); }
+    100% { background-color: transparent; }
+}
+
+/* Animation de lueur pour les attaquants */
+.enemy.attacking {
+    animation: attackGlow 0.8s ease-out;
+}
+
+@keyframes attackGlow {
+    0% { 
+        box-shadow: 0 0 0 rgba(255, 215, 0, 0);
+        transform: scale(1);
+    }
+    30% { 
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+        transform: scale(1.05);
+    }
+    70% { 
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        transform: scale(1.02);
+    }
+    100% { 
+        box-shadow: 0 0 0 rgba(255, 215, 0, 0);
+        transform: scale(1);
+    }
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+    .damage-floater {
+        font-size: 20px;
+    }
+    
+    .damage-floater.critical {
+        font-size: 24px;
+    }
+    
+    .attack-line {
+        height: 3px;
     }
 }

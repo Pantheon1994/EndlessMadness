@@ -75,6 +75,8 @@ export class GameComponent implements OnInit, OnDestroy {
       const card = gameState.playerHand[cardIndex];
       if (card && card.id === 'mana-crystal') {
         this.animateManaGain();
+      } else if (card && card.id === 'mana-conversion') {
+        this.animateManaConversion();
       }
     }).unsubscribe();
     
@@ -172,10 +174,27 @@ export class GameComponent implements OnInit, OnDestroy {
     let classes = 'card';
     if (card.currentHp && card.currentHp <= 0) classes += ' dead';
     
+    // Ajouter la classe pour l'effet Provoque
+    if (card.effect === 'Provoque') {
+      classes += ' has-taunt';
+    }
+    
     // Ajouter des classes pour les effets temporaires
     if (card.temporaryEffects) {
       card.temporaryEffects.forEach(effect => {
         classes += ` effect-${effect.type}`;
+      });
+    }
+    
+    // Ajouter des classes pour les animations d'attaque
+    if (this.gameState$ && this.gameState$) {
+      this.gameState$.subscribe(gameState => {
+        if (gameState.currentAttack) {
+          const cardId = card.id || `card-${gameState.cardsInPlay.indexOf(card)}`;
+          if (gameState.currentAttack.targetId === cardId) {
+            classes += ' being-attacked';
+          }
+        }
       });
     }
     
@@ -185,6 +204,21 @@ export class GameComponent implements OnInit, OnDestroy {
   getEnemyClass(enemy: Enemy): string {
     let classes = 'enemy';
     if (enemy.currentHp <= 0) classes += ' dead';
+    
+    // Ajouter des classes pour les animations d'attaque
+    if (this.gameState$ && this.gameState$) {
+      this.gameState$.subscribe(gameState => {
+        if (gameState.currentAttack) {
+          if (gameState.currentAttack.attackerId === enemy.id) {
+            classes += ' attacking';
+          }
+          if (gameState.currentAttack.targetId === enemy.id) {
+            classes += ' being-attacked';
+          }
+        }
+      });
+    }
+    
     return classes;
   }
 
@@ -385,6 +419,30 @@ export class GameComponent implements OnInit, OnDestroy {
     setTimeout(() => manaBonus.remove(), 2000);
   }
 
+  private animateManaConversion(): void {
+    const manaContainer = document.querySelector('.mana-container') as HTMLElement;
+    if (manaContainer) {
+      manaContainer.classList.add('mana-drain');
+      setTimeout(() => manaContainer.classList.remove('mana-drain'), 1200);
+    }
+    
+    // Afficher un effet de conversion
+    const conversionEffect = document.createElement('div');
+    conversionEffect.className = 'gold-bonus'; // Réutiliser le style du bonus d'or
+    conversionEffect.textContent = '🔄 Conversion Totale!';
+    conversionEffect.style.color = '#9b59b6'; // Couleur violette pour la magie
+    conversionEffect.style.fontSize = '18px';
+    
+    document.body.appendChild(conversionEffect);
+    setTimeout(() => conversionEffect.remove(), 2500);
+    
+    // Effet de particules spécial pour la conversion
+    const handElement = document.querySelector('.hand') as HTMLElement;
+    if (handElement) {
+      this.createParticleEffect(handElement, 'magic');
+    }
+  }
+
   // Méthodes pour améliorer l'UX mobile
   private addMobileUXEnhancements(): void {
     // Ajouter un feedback visuel pour les éléments cliquables
@@ -548,5 +606,103 @@ export class GameComponent implements OnInit, OnDestroy {
 
   isPlayerHealthLow(gameState: GameState): boolean {
     return gameState.playerHp <= Math.floor(gameState.maxPlayerHp * 0.3); // 30% ou moins
+  }
+
+  getSpecialAbilityName(specialAbility: string): string {
+    switch (specialAbility) {
+      case 'armor-break':
+        return '🔨 Brise-Armure';
+      case 'heal-allies':
+        return '💚 Soigneur';
+      default:
+        return specialAbility;
+    }
+  }
+
+  trackNotification(index: number, notification: string): string {
+    return notification;
+  }
+
+  trackFloater(index: number, floater: any): string {
+    return floater.id;
+  }
+
+  // Calcul de position pour les bulles de dégâts
+  getElementPosition(targetId: string, addRandomOffset: boolean = true): { x: number, y: number } {
+    // Position par défaut au cas où l'élément n'est pas trouvé
+    let position = { x: 300, y: 200 };
+    
+    try {
+      let element: HTMLElement | null = null;
+      
+      if (targetId === 'player') {
+        // Position pour les dégâts au joueur (près des PV)
+        const playerHpElement = document.querySelector('.player-hp');
+        if (playerHpElement) {
+          const rect = playerHpElement.getBoundingClientRect();
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+          position = { 
+            x: rect.left + scrollLeft + rect.width / 2, 
+            y: rect.top + scrollTop + rect.height + 5 
+          };
+        }
+      } else {
+        // Essayer d'abord de trouver une carte du joueur
+        element = document.querySelector(`[data-card-id="${targetId}"]`);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+          position = { 
+            x: rect.left + scrollLeft + rect.width / 2, 
+            y: rect.top + scrollTop + (addRandomOffset ? rect.height / 2 : -10) // -10px au-dessus pour les floaters
+          };
+        } else {
+          // Sinon, essayer de trouver un ennemi
+          element = document.querySelector(`[data-enemy-id="${targetId}"]`);
+          if (element) {
+            const rect = element.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+            position = { 
+              x: rect.left + scrollLeft + rect.width / 2, 
+              y: rect.top + scrollTop + (addRandomOffset ? rect.height / 2 : -10) // -10px au-dessus pour les floaters
+            };
+          }
+        }
+      }
+      
+      // Ajouter un petit décalage aléatoire pour éviter la superposition (seulement pour les bulles de dégâts)
+      if (addRandomOffset) {
+        position.x += (Math.random() - 0.5) * 40;
+        position.y += (Math.random() - 0.5) * 20;
+      }
+      
+    } catch (error) {
+      console.warn('Erreur lors du calcul de position pour', targetId, error);
+    }
+    
+    return position;
+  }
+
+  // Calcul de la ligne d'attaque entre deux éléments
+  getAttackLineStyle(attackerId: string, targetId: string): any {
+    const attackerPos = this.getElementPosition(attackerId, false); // Pas de décalage aléatoire
+    const targetPos = this.getElementPosition(targetId, false); // Pas de décalage aléatoire
+    
+    // Calculer la distance et l'angle entre les deux points
+    const deltaX = targetPos.x - attackerPos.x;
+    const deltaY = targetPos.y - attackerPos.y;
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+    
+    return {
+      left: attackerPos.x + 'px',
+      top: (attackerPos.y - 2) + 'px', // -2 pour centrer la ligne de 4px
+      width: distance + 'px',
+      transform: `rotate(${angle}deg)`,
+      transformOrigin: 'left center'
+    };
   }
 }

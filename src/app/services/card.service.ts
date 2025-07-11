@@ -11,28 +11,45 @@ import { StorageService } from './storage.service';
 export class CardService {
   private player!: Player;
   private dailyMarket: DailyMarket | null = null;
+  
+  // Configuration des limitations par rareté
+  private readonly RARITY_LIMITS = {
+    'normal': 5,     // Cartes normales : 5 max
+    'blue': 3,       // Cartes bleues : 3 max  
+    'epic': 2,       // Cartes épiques : 2 max
+    'legendary': 1   // Cartes légendaires : 1 max
+  };
+
+  // Configuration des limitations par type de carte (fallback)
+  private readonly DECK_LIMITS = {
+    'unit': 3,    // Max 3 unités de chaque type
+    'spell': 1    // Max 1 sort de chaque type (unique)
+  };
+
   private allCards: Card[] = [
     {
       id: 'guard-of-void',
       name: 'Garde du Néant',
       type: 'unit',
       cost: 2,
-      hp: 3,
+      hp: 4,
       attack: 1,
       defense: 1,
       effect: 'Provoque',
-      price: 40
+      price: 40,
+      rarity: 'blue'
     },
     {
       id: 'fire-mage',
       name: 'Mage de Feu',
       type: 'unit',
       cost: 2,
-      hp: 2,
+      hp: 3,
       attack: 3,
       defense: 0,
       effect: 'Attaque à distance',
-      price: 40
+      price: 40,
+      rarity: 'blue'
     },
     {
       id: 'healing-potion',
@@ -40,40 +57,44 @@ export class CardService {
       type: 'spell',
       cost: 1,
       effect: 'Restaure 3 PV à une unité ciblée',
-      price: 30
+      price: 30,
+      rarity: 'normal'
     },
     {
       id: 'berserker',
       name: 'Berserker',
       type: 'unit',
       cost: 3,
-      hp: 4,
+      hp: 5,
       attack: 3,
       defense: 0,
       effect: 'Gagne +1 Attaque quand blessé',
-      price: 50
+      price: 50,
+      rarity: 'epic'
     },
     {
       id: 'basic-warrior',
       name: 'Guerrier',
       type: 'unit',
       cost: 1,
-      hp: 2,
+      hp: 3,
       attack: 1,
       defense: 0,
       effect: 'Unité de base',
-      price: 20
+      price: 20,
+      rarity: 'normal'
     },
     {
       id: 'armored-knight',
       name: 'Chevalier Blindé',
       type: 'unit',
       cost: 3,
-      hp: 3,
+      hp: 4,
       attack: 2,
       defense: 2,
       effect: 'Haute défense',
-      price: 60
+      price: 60,
+      rarity: 'epic'
     },
     {
       id: 'fireball',
@@ -81,7 +102,8 @@ export class CardService {
       type: 'spell',
       cost: 2,
       effect: 'Inflige 3 dégâts à un ennemi ciblé',
-      price: 35
+      price: 35,
+      rarity: 'blue'
     },
     {
       id: 'shield-boost',
@@ -89,7 +111,8 @@ export class CardService {
       type: 'spell',
       cost: 1,
       effect: 'Donne +2 Défense à une unité ciblée',
-      price: 25
+      price: 25,
+      rarity: 'normal'
     },
     {
       id: 'mana-crystal',
@@ -97,7 +120,8 @@ export class CardService {
       type: 'spell',
       cost: 0,
       effect: 'Donne +1 Mana ce tour',
-      price: 15
+      price: 15,
+      rarity: 'normal'
     },
     {
       id: 'rage-boost',
@@ -105,7 +129,8 @@ export class CardService {
       type: 'spell',
       cost: 2,
       effect: 'Double les dégâts d\'une unité ciblée pendant 2 tours',
-      price: 50
+      price: 50,
+      rarity: 'epic'
     },
     {
       id: 'arsenal',
@@ -113,7 +138,8 @@ export class CardService {
       type: 'spell',
       cost: 4,
       effect: 'Augmente définitivement l\'attaque d\'une unité de +2',
-      price: 80
+      price: 80,
+      rarity: 'legendary'
     },
     {
       id: 'stun-bolt',
@@ -121,7 +147,8 @@ export class CardService {
       type: 'spell',
       cost: 3,
       effect: 'Étourdit un ennemi pendant 2 tours',
-      price: 60
+      price: 60,
+      rarity: 'blue'
     },
     {
       id: 'divine-protection',
@@ -129,7 +156,8 @@ export class CardService {
       type: 'spell',
       cost: 5,
       effect: 'Rend une unité invulnérable pendant 1 tour',
-      price: 100
+      price: 100,
+      rarity: 'legendary'
     },
     {
       id: 'poison',
@@ -137,7 +165,47 @@ export class CardService {
       type: 'spell',
       cost: 2,
       effect: 'Inflige 1 dégât par tour à un ennemi jusqu\'à sa mort',
-      price: 45
+      price: 45,
+      rarity: 'blue'
+    },
+    {
+      id: 'mana-conversion',
+      name: 'Conversion de Mana',
+      type: 'spell',
+      cost: 0,
+      effect: 'Convertit tous vos points de mana en cartes (1 mana = 1 carte)',
+      price: 70,
+      rarity: 'epic'
+    },
+    {
+      id: 'card-draw',
+      name: 'Pioche',
+      type: 'spell',
+      cost: 1,
+      effect: 'Pioche 2 cartes de votre deck',
+      price: 25,
+      rarity: 'normal'
+    },
+    {
+      id: 'explosion',
+      name: 'Explosion',
+      type: 'spell',
+      cost: 6,
+      effect: 'Inflige 2 dégâts à tous les ennemis et 1 dégât à toutes vos unités',
+      price: 120,
+      rarity: 'epic'
+    },
+    {
+      id: 'demonist',
+      name: 'Démoniste',
+      type: 'unit',
+      cost: 4,
+      hp: 3,
+      attack: 2,
+      defense: 0,
+      effect: 'Invoque un Squelette (1/1) quand un ennemi meurt',
+      price: 90,
+      rarity: 'epic'
     }
   ];
 
@@ -158,6 +226,18 @@ export class CardService {
         this.player.maxFloorReached = 1;
         this.savePlayer();
       }
+      
+      // Nettoyer les propriétés de jeu des cartes existantes dans la collection et le deck
+      this.player.collection = this.player.collection.map(card => this.cleanCard(card));
+      this.player.deck = this.player.deck.map(card => this.cleanCard(card));
+      
+      // Synchroniser la collection avec le deck pour corriger les incohérences
+      this.synchronizeCollectionWithDeck();
+      
+      // Appliquer les nouvelles règles de limitation aux decks existants
+      this.applyNewDeckRules();
+      
+      this.savePlayer(); // Sauvegarder les cartes nettoyées et synchronisées
     } else {
       // Collection de départ avec quelques cartes de base
       this.player = {
@@ -170,9 +250,8 @@ export class CardService {
           this.copyCard('guard-of-void'),
           this.copyCard('fire-mage'),
           this.copyCard('healing-potion'),
-          this.copyCard('healing-potion'),
           this.copyCard('mana-crystal'),
-          this.copyCard('mana-crystal')
+          this.copyCard('card-draw')
         ],
         deck: []
       };
@@ -181,10 +260,9 @@ export class CardService {
   }
 
   private buildStarterDeck(): void {
-    // Deck de départ de 20 cartes équilibré
+    // Deck de départ équilibré avec seulement les cartes de la collection
     this.player.deck = [
-      ...this.player.collection, // 9 cartes de la collection (incluant 2 cristaux)
-      ...Array(11).fill(null).map(() => this.copyCard('basic-warrior')) // 11 guerriers de base
+      ...this.player.collection // Toutes les cartes de la collection
     ];
   }
 
@@ -192,10 +270,19 @@ export class CardService {
     const template = this.allCards.find(c => c.id === cardId);
     if (!template) throw new Error(`Carte non trouvée: ${cardId}`);
     
+    // Copier seulement les propriétés de base (pas les propriétés de jeu)
     return {
-      ...template,
-      currentHp: template.hp,
-      currentDefense: template.defense || 0
+      id: template.id,
+      name: template.name,
+      type: template.type,
+      cost: template.cost,
+      hp: template.hp,
+      attack: template.attack,
+      defense: template.defense,
+      effect: template.effect,
+      price: template.price,
+      rarity: template.rarity, // Inclure la rareté
+      maxInDeck: template.maxInDeck // Inclure la limite de deck si définie
     };
   }
 
@@ -445,5 +532,175 @@ export class CardService {
 
   getAvailableFloors(): number[] {
     return Array.from({ length: this.player.maxFloorReached }, (_, i) => i + 1);
+  }
+
+  // Méthode pour nettoyer les propriétés de jeu des cartes (pour les sauvegardes corrompues)
+  private cleanCard(card: Card): Card {
+    return {
+      id: card.id,
+      name: card.name,
+      type: card.type,
+      cost: card.cost,
+      hp: card.hp,
+      attack: card.attack,
+      defense: card.defense,
+      effect: card.effect,
+      price: card.price,
+      maxInDeck: card.maxInDeck // Préserver la limite de deck
+    };
+  }
+
+  // Méthode pour obtenir le nombre d'exemplaires de chaque carte dans la collection
+  getCardCount(cardId: string): number {
+    return this.player.collection.filter(card => card.id === cardId).length;
+  }
+
+  // Méthode pour obtenir les cartes uniques avec leurs quantités
+  getUniqueCardsWithCounts(): { card: Card, count: number }[] {
+    const cardCounts: { [key: string]: { card: Card, count: number } } = {};
+    
+    this.player.collection.forEach(card => {
+      if (cardCounts[card.id]) {
+        cardCounts[card.id].count++;
+      } else {
+        cardCounts[card.id] = { card: card, count: 1 };
+      }
+    });
+    
+    return Object.values(cardCounts);
+  }
+
+  // Méthode pour synchroniser la collection avec le deck existant
+  private synchronizeCollectionWithDeck(): void {
+    // Compter les cartes dans le deck
+    const deckCounts: { [key: string]: number } = {};
+    this.player.deck.forEach(card => {
+      deckCounts[card.id] = (deckCounts[card.id] || 0) + 1;
+    });
+    
+    // Compter les cartes dans la collection
+    const collectionCounts: { [key: string]: number } = {};
+    this.player.collection.forEach(card => {
+      collectionCounts[card.id] = (collectionCounts[card.id] || 0) + 1;
+    });
+    
+    // Ajouter les cartes manquantes à la collection
+    Object.keys(deckCounts).forEach(cardId => {
+      const neededInDeck = deckCounts[cardId];
+      const availableInCollection = collectionCounts[cardId] || 0;
+      const missing = neededInDeck - availableInCollection;
+      
+      if (missing > 0) {
+        console.log(`Ajout de ${missing} exemplaires de ${cardId} à la collection`);
+        for (let i = 0; i < missing; i++) {
+          this.player.collection.push(this.copyCard(cardId));
+        }
+      }
+    });
+  }
+
+  // Méthode publique pour forcer la synchronisation
+  forceSynchronizeCollection(): void {
+    this.synchronizeCollectionWithDeck();
+    this.savePlayer();
+  }
+
+  // Méthode pour obtenir la limite maximale d'une carte dans un deck
+  getCardMaxInDeck(card: Card): number {
+    // Priorité au système de rareté
+    if (card.rarity && this.RARITY_LIMITS[card.rarity]) {
+      console.log(`Limite par rareté pour ${card.name} (${card.rarity}): ${this.RARITY_LIMITS[card.rarity]}`);
+      return this.RARITY_LIMITS[card.rarity];
+    }
+    
+    // Fallback vers les limites individuelles (pour compatibilité)
+    if (card.maxInDeck !== undefined) {
+      console.log(`Limite individuelle pour ${card.name}: ${card.maxInDeck}`);
+      return card.maxInDeck;
+    }
+    
+    // Fallback vers les limites par type
+    const typeLimit = this.DECK_LIMITS[card.type] || 3;
+    console.log(`Limite par type pour ${card.name} (${card.type}): ${typeLimit}`);
+    return typeLimit;
+  }
+
+  // Méthode pour vérifier si on peut ajouter une carte au deck
+  canAddCardToDeck(cardId: string, currentDeck: Card[]): boolean {
+    const card = this.allCards.find(c => c.id === cardId);
+    if (!card) {
+      console.log(`Carte ${cardId} non trouvée`);
+      return false;
+    }
+    
+    const maxAllowed = this.getCardMaxInDeck(card);
+    const currentCount = currentDeck.filter(c => c.id === cardId).length;
+    
+    console.log(`Carte ${cardId} (${card.rarity}): ${currentCount}/${maxAllowed} dans le deck`);
+    
+    return currentCount < maxAllowed;
+  }
+
+  // Méthode pour obtenir le nombre de cartes de ce type déjà dans le deck
+  getCardCountInDeck(cardId: string, deck: Card[]): number {
+    return deck.filter(card => card.id === cardId).length;
+  }
+
+  // Méthode pour nettoyer un deck selon les nouvelles règles de limitation
+  cleanDeckAccordingToLimits(deck: Card[]): Card[] {
+    const cleanedDeck: Card[] = [];
+    const cardCounts: { [key: string]: number } = {};
+    
+    deck.forEach(card => {
+      const cardId = card.id;
+      const currentCount = cardCounts[cardId] || 0;
+      const maxAllowed = this.getCardMaxInDeck(card);
+      
+      if (currentCount < maxAllowed) {
+        cleanedDeck.push(card);
+        cardCounts[cardId] = currentCount + 1;
+      } else {
+        console.log(`Carte ${card.name} retirée du deck (limite: ${maxAllowed})`);
+      }
+    });
+    
+    return cleanedDeck;
+  }
+
+  // Méthode pour appliquer les nouvelles règles au deck actuel
+  applyNewDeckRules(): void {
+    const originalDeckSize = this.player.deck.length;
+    this.player.deck = this.cleanDeckAccordingToLimits(this.player.deck);
+    const newDeckSize = this.player.deck.length;
+    
+    if (originalDeckSize !== newDeckSize) {
+      console.log(`Deck nettoyé: ${originalDeckSize} → ${newDeckSize} cartes`);
+      this.savePlayer();
+    }
+  }
+
+  // Méthode pour obtenir toutes les limites de cartes (utile pour debug)
+  getAllCardLimits(): { [cardId: string]: number } {
+    const limits: { [cardId: string]: number } = {};
+    this.allCards.forEach(card => {
+      limits[card.id] = this.getCardMaxInDeck(card);
+    });
+    return limits;
+  }
+
+  // Méthode pour mettre à jour la limite d'une carte spécifique
+  updateCardLimit(cardId: string, newLimit: number): boolean {
+    const cardIndex = this.allCards.findIndex(c => c.id === cardId);
+    if (cardIndex === -1) return false;
+    
+    this.allCards[cardIndex].maxInDeck = newLimit;
+    console.log(`Limite de ${this.allCards[cardIndex].name} mise à jour: ${newLimit}`);
+    return true;
+  }
+
+  // Méthode pour réinitialiser complètement la progression
+  resetPlayerProgress(): void {
+    localStorage.removeItem('endless-madness-player');
+    this.initializePlayer(); // Réinitialise avec la nouvelle configuration
   }
 }

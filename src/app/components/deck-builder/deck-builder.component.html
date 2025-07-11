@@ -4,9 +4,6 @@
     <div class="deck-stats">
       <span>Cartes: {{ currentDeck.length }}/30</span>
       <span>Coût moyen: {{ getDeckCost().average }}</span>
-      <span [class.valid]="currentDeck.length >= 20" [class.invalid]="currentDeck.length < 20">
-        {{ currentDeck.length >= 20 ? 'Deck valide' : 'Minimum 20 cartes' }}
-      </span>
     </div>
   </header>
 
@@ -15,22 +12,42 @@
     <section class="collection-section">
       <div class="section-header">
         <h2>Collection disponible</h2>
-        <button (click)="refreshData()" class="btn btn-refresh">🔄 Actualiser</button>
+        <div class="header-actions">
+          <button (click)="refreshData()" class="btn btn-refresh">🔄 Actualiser</button>
+          <button (click)="debugCollectionData()" class="btn btn-debug">🐛 Debug</button>
+          <button (click)="forceSyncCollection()" class="btn btn-sync">🔧 Sync Collection</button>
+        </div>
+      </div>
+      
+      <div class="legend">
+        <p><strong>Format d'affichage :</strong> <span class="example-count">Dans deck / Max autorisé | Possédées</span></p>
+        <p><span class="legend-unique">■</span> Cartes uniques (1 max) | <span class="legend-limited">■</span> Cartes limitées | <span class="legend-multiple">■</span> Cartes multiples (3+ max)</p>
+        <p><em>Chaque carte a sa propre limite configurée individuellement</em></p>
       </div>
       <div class="collection-grid">
         <div *ngFor="let item of getUniqueCollectionCards()" 
              class="collection-card"
-             [class.maxed-out]="!canAddCard(item.card.id)">
+             [class.maxed-out]="!canAddCard(item.card.id)"
+             [class.unique-card]="item.maxInDeck === 1"
+             [class.limited-card]="item.maxInDeck === 2"
+             [class.multiple-card]="item.maxInDeck >= 3"
+             [class.at-limit]="item.inDeck >= item.maxInDeck">
           <div class="card-header">
             <span class="card-name">{{ item.card.name }}</span>
             <div class="card-counts">
-              <span class="in-deck">{{ item.inDeck }}</span>
+              <span class="in-deck" [class.at-limit]="item.inDeck >= item.maxInDeck">{{ item.inDeck }}</span>
               <span class="divider">/</span>
+              <span class="max-allowed">{{ item.maxInDeck }}</span>
+              <span class="divider">|</span>
               <span class="available">{{ item.available }}</span>
             </div>
           </div>
           
-          <div class="card-type-badge">{{ item.card.type }}</div>
+          <div class="card-type-badge">
+            {{ item.card.type }}
+            <span *ngIf="item.maxInDeck === 1" class="unique-indicator">UNIQUE</span>
+            <span *ngIf="item.maxInDeck > 1 && item.maxInDeck < 10" class="limited-indicator">MAX {{ item.maxInDeck }}</span>
+          </div>
           
           <div class="card-stats" *ngIf="item.card.type === 'unit'">
             <span class="stat hp">{{ item.card.hp }} PV</span>
@@ -110,7 +127,6 @@
   <footer class="deck-builder-footer">
     <button (click)="resetDeck()" class="btn btn-danger">🗑️ Vider le deck</button>
     <button (click)="saveDeck()" 
-            [disabled]="currentDeck.length < 20"
             class="btn btn-primary">💾 Sauvegarder le deck</button>
     <button (click)="goBack()" class="btn btn-secondary">← Retour au menu</button>
   </footer>

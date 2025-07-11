@@ -35,6 +35,15 @@ export class MenuComponent {
     this.loadAvailableFloors();
   }
 
+  // Méthode pour réinitialiser la progression
+  resetProgress(): void {
+    if (confirm('Êtes-vous sûr de vouloir réinitialiser votre progression ? Cette action est irréversible.')) {
+      this.cardService.resetPlayerProgress();
+      this.loadAvailableFloors();
+      alert('Progression réinitialisée ! Vous commencez maintenant avec 3 guerriers de base.');
+    }
+  }
+
   startGame(): void {
     if (this.availableFloors.length > 1) {
       this.showFloorSelection = true;

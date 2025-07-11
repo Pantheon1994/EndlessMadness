@@ -10,6 +10,13 @@
     </div>
   </header>
 
+  <!-- Zone de notifications -->
+  <div class="notifications-container" *ngIf="gameState.notifications && gameState.notifications.length > 0">
+    <div class="notification" *ngFor="let notification of gameState.notifications; trackBy: trackNotification">
+      {{ notification }}
+    </div>
+  </div>
+
   <!-- Zone de combat -->
   <main class="battle-area">
     <!-- Ennemis -->
@@ -21,26 +28,44 @@
              [class.targetable]="isEnemyTargetable(enemy)"
              [class.spell-target]="awaitingTarget && isEnemyTargetable(enemy)"
              [class.attack-target]="awaitingAttackTarget && isEnemyTargetable(enemy)"
+             [attr.data-enemy-id]="enemy.id"
              (click)="isEnemyTargetable(enemy) ? selectEnemyTarget(i) : null">
           <!-- Bulles de stats pour les ennemis -->
           <div class="stat-bubble hp-bubble">{{ enemy.currentHp }}/{{ enemy.hp }}</div>
           <div class="stat-bubble attack-bubble">{{ enemy.attack }}</div>
+          <div class="stat-bubble defense-bubble" *ngIf="enemy.currentDefense !== undefined && enemy.currentDefense > 0">{{ enemy.currentDefense }}</div>
           
           <div class="enemy-name">{{ enemy.name }}</div>
           <div class="enemy-effect" *ngIf="enemy.effect">{{ enemy.effect }}</div>
+          
+          <!-- Affichage des capacités spéciales des ennemis -->
+          <div class="enemy-special-ability" *ngIf="enemy.specialAbility">
+            <span class="special-ability-badge" [class]="'ability-' + enemy.specialAbility">
+              {{ getSpecialAbilityName(enemy.specialAbility) }}
+            </span>
+          </div>
+          
+          <!-- Affichage des effets temporaires sur les ennemis -->
+          <div class="temporary-effects" *ngIf="enemy.temporaryEffects && enemy.temporaryEffects.length > 0">
+            <div class="effect-badge" *ngFor="let effect of enemy.temporaryEffects" 
+                 [class]="'effect-' + effect.type">
+              {{ effect.description }}
+              <span class="effect-duration" *ngIf="effect.duration > 0">({{ effect.duration }})</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Terrain du joueur -->
     <section class="player-field">
-      <h3>Terrain ({{ gameState.cardsInPlay.length }}/{{ gameState.maxSlots }})</h3>
       <div class="field-grid">
         <div *ngFor="let card of gameState.cardsInPlay; let i = index" 
              [class]="getCardClass(card)"
              [class.targetable]="isTargetable(card)"
              [class.can-attack]="canUnitAttack(i)"
              [class.awaiting-attack]="awaitingAttackTarget?.unitIndex === i"
+             [attr.data-card-id]="card.id"
              (click)="isTargetable(card) ? selectCardTarget(i) : null"
              class="field-card">
           <!-- Bulles de stats -->
@@ -78,6 +103,28 @@
       </div>
     </section>
   </main>
+
+  <!-- Animations d'attaque -->
+  <div class="attack-animations" *ngIf="gameState.currentAttack">
+    <div class="attack-line" 
+         [class]="'attack-' + gameState.currentAttack.type"
+         [ngStyle]="getAttackLineStyle(gameState.currentAttack.attackerId, gameState.currentAttack.targetId)"
+         [attr.data-attacker]="gameState.currentAttack.attackerId"
+         [attr.data-target]="gameState.currentAttack.targetId">
+    </div>
+  </div>
+
+  <!-- Bulles de dégâts flottantes -->
+  <div class="damage-floaters">
+    <div *ngFor="let floater of gameState.damageFloaters; trackBy: trackFloater"
+         class="damage-floater"
+         [class]="floater.type || 'damage'"
+         [style.left.px]="floater.targetId ? getElementPosition(floater.targetId, false).x : floater.x"
+         [style.top.px]="floater.targetId ? getElementPosition(floater.targetId, false).y : floater.y">
+      <span *ngIf="floater.type === 'healing'">+{{ floater.damage }}</span>
+      <span *ngIf="floater.type !== 'healing'">-{{ floater.damage }}</span>
+    </div>
+  </div>
 
   <!-- Main du joueur -->
   <section class="player-hand" *ngIf="gameState.gamePhase === 'player'">

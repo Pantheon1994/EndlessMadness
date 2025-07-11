@@ -28,9 +28,14 @@ export class DeckBuilderComponent implements OnInit {
 
   loadData(): void {
     // Recharger les données fraîches depuis le service
-    this.collection = [...this.cardService.getCollection()];
-    this.currentDeck = [...this.cardService.getDeck()];
+    this.collection = this.cardService.getCollection();
+    this.currentDeck = this.cardService.getDeck();
     this.groupData();
+    
+    // Debug: afficher les données pour vérifier
+    console.log('Collection chargée:', this.collection.length, 'cartes');
+    console.log('Deck actuel:', this.currentDeck.length, 'cartes');
+    console.log('Cartes uniques avec comptes:', this.cardService.getUniqueCardsWithCounts());
   }
 
   refreshData(): void {
@@ -57,22 +62,33 @@ export class DeckBuilderComponent implements OnInit {
     });
   }
 
-  getUniqueCollectionCards(): { card: Card, available: number, inDeck: number }[] {
-    return Object.keys(this.groupedCollection).map(cardId => ({
-      card: this.groupedCollection[cardId][0],
-      available: this.groupedCollection[cardId].length,
-      inDeck: this.groupedDeck[cardId] ? this.groupedDeck[cardId].length : 0
+  getUniqueCollectionCards(): { card: Card, available: number, inDeck: number, maxInDeck: number }[] {
+    // Utiliser la méthode du service pour obtenir les cartes uniques avec leurs comptes
+    const uniqueCards = this.cardService.getUniqueCardsWithCounts();
+    
+    return uniqueCards.map(item => ({
+      card: item.card,
+      available: item.count, // Nombre de cartes disponibles dans la collection
+      inDeck: this.groupedDeck[item.card.id] ? this.groupedDeck[item.card.id].length : 0,
+      maxInDeck: this.cardService.getCardMaxInDeck(item.card) // Limite maximale pour cette carte
     }));
   }
 
   addCardToDeck(cardId: string): void {
-    const availableCards = this.groupedCollection[cardId];
-    const cardsInDeck = this.groupedDeck[cardId] || [];
+    const availableInCollection = this.cardService.getCardCount(cardId);
+    const cardsInDeck = this.groupedDeck[cardId] ? this.groupedDeck[cardId].length : 0;
     
-    if (cardsInDeck.length < availableCards.length && this.currentDeck.length < 30) {
-      const cardToAdd = { ...availableCards[0] };
-      this.currentDeck.push(cardToAdd);
-      this.groupData();
+    // Vérifier les limitations avec le nouveau système
+    const canAdd = this.cardService.canAddCardToDeck(cardId, this.currentDeck);
+    
+    if (cardsInDeck < availableInCollection && this.currentDeck.length < 30 && canAdd) {
+      // Obtenir la carte template depuis la collection
+      const cardTemplate = this.collection.find(card => card.id === cardId);
+      if (cardTemplate) {
+        const cardToAdd = { ...cardTemplate };
+        this.currentDeck.push(cardToAdd);
+        this.groupData();
+      }
     }
   }
 
@@ -85,9 +101,13 @@ export class DeckBuilderComponent implements OnInit {
   }
 
   canAddCard(cardId: string): boolean {
-    const availableCards = this.groupedCollection[cardId];
-    const cardsInDeck = this.groupedDeck[cardId] || [];
-    return cardsInDeck.length < availableCards.length && this.currentDeck.length < 30;
+    const availableInCollection = this.cardService.getCardCount(cardId);
+    const cardsInDeck = this.groupedDeck[cardId] ? this.groupedDeck[cardId].length : 0;
+    const canAddBasedOnLimits = this.cardService.canAddCardToDeck(cardId, this.currentDeck);
+    
+    return cardsInDeck < availableInCollection && 
+           this.currentDeck.length < 30 && 
+           canAddBasedOnLimits;
   }
 
   canRemoveCard(cardId: string): boolean {
@@ -95,12 +115,8 @@ export class DeckBuilderComponent implements OnInit {
   }
 
   saveDeck(): void {
-    if (this.currentDeck.length >= 20) {
-      this.cardService.setDeck(this.currentDeck);
-      alert('Deck sauvegardé avec succès!');
-    } else {
-      alert('Votre deck doit contenir au moins 20 cartes!');
-    }
+    this.cardService.setDeck(this.currentDeck);
+    alert('Deck sauvegardé avec succès!');
   }
 
   resetDeck(): void {
@@ -135,5 +151,31 @@ export class DeckBuilderComponent implements OnInit {
       card: this.groupedDeck[cardId][0],
       count: this.groupedDeck[cardId].length
     }));
+  }
+
+  debugCollectionData(): void {
+    console.log('=== DEBUG COLLECTION DATA ===');
+    console.log('Collection brute:', this.cardService.getCollection());
+    console.log('Cartes uniques avec comptes:', this.cardService.getUniqueCardsWithCounts());
+    console.log('Deck actuel:', this.cardService.getDeck());
+    console.log('Collection groupée:', this.groupedCollection);
+    console.log('Deck groupé:', this.groupedDeck);
+    console.log('getUniqueCollectionCards():', this.getUniqueCollectionCards());
+    
+    // Afficher spécifiquement pour le Garde du Néant
+    const guardCount = this.cardService.getCardCount('guard-of-void');
+    console.log('Nombre de Gardes du Néant dans la collection:', guardCount);
+    
+    // Afficher toutes les limites de cartes
+    console.log('=== LIMITES PAR CARTE ===');
+    console.log(this.cardService.getAllCardLimits());
+  }
+
+  // Méthode pour forcer la synchronisation
+  forceSyncCollection(): void {
+    console.log('Forçage de la synchronisation...');
+    this.cardService.forceSynchronizeCollection();
+    this.loadData(); // Recharger les données
+    console.log('Synchronisation terminée !');
   }
 }
