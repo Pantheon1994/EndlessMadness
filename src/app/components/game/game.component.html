@@ -21,7 +21,6 @@
   <main class="battle-area">
     <!-- Ennemis -->
     <section class="enemies-section">
-      <h3>Ennemis</h3>
       <div class="enemies-grid">
         <div *ngFor="let enemy of gameState.enemies; let i = index" 
              [class]="getEnemyClass(enemy)"
@@ -30,6 +29,9 @@
              [class.attack-target]="awaitingAttackTarget && isEnemyTargetable(enemy)"
              [attr.data-enemy-id]="enemy.id"
              (click)="isEnemyTargetable(enemy) ? selectEnemyTarget(i) : null">
+          <!-- Image de l'ennemi -->
+          <div class="enemy-image" [style.background-image]="'url(' + getEnemyImagePath(enemy.id) + ')'"></div>
+          
           <!-- Bulles de stats pour les ennemis -->
           <div class="stat-bubble hp-bubble">{{ enemy.currentHp }}/{{ enemy.hp }}</div>
           <div class="stat-bubble attack-bubble">{{ enemy.attack }}</div>
@@ -66,8 +68,11 @@
              [class.can-attack]="canUnitAttack(i)"
              [class.awaiting-attack]="awaitingAttackTarget?.unitIndex === i"
              [attr.data-card-id]="card.id"
-             (click)="isTargetable(card) ? selectCardTarget(i) : null"
+             (click)="handleCardClick(i)"
              class="field-card">
+          <!-- Image de la carte -->
+          <div class="card-image" [style.background-image]="'url(' + getCardImagePath(card.id) + ')'"></div>
+          
           <!-- Bulles de stats -->
           <div class="stat-bubble hp-bubble" *ngIf="card.type === 'unit'">{{ card.currentHp }}/{{ card.hp }}</div>
           <div class="stat-bubble attack-bubble" *ngIf="card.type === 'unit'">{{ card.attack }}</div>
@@ -84,15 +89,7 @@
             </div>
           </div>
           
-          <!-- Bouton d'attaque pour chaque unité -->
-          <div class="unit-actions" *ngIf="card.type === 'unit' && gameState.gamePhase === 'player'">
-            <button (click)="attackWithUnit(i)" 
-                    [disabled]="!canUnitAttack(i)"
-                    [class.can-attack]="canUnitAttack(i)"
-                    class="btn btn-attack">
-              {{ canUnitAttack(i) ? '⚔️ Attaquer' : '❌ Déjà attaqué' }}
-            </button>
-          </div>
+
         </div>
         
         <!-- Slots vides -->
@@ -102,6 +99,31 @@
         </div>
       </div>
     </section>
+
+      <section class="player-hand" *ngIf="gameState.gamePhase === 'player'">
+    <div class="hand-cards">
+      <div *ngFor="let card of gameState.playerHand; let i = index" 
+           class="hand-card"
+           [class.affordable]="card.cost <= gameState.mana"
+           [class.expensive]="card.cost > gameState.mana"
+           (click)="playCard(i)">
+        <!-- Image de la carte -->
+        <div class="card-image" [style.background-image]="'url(' + getCardImagePath(card.id) + ')'"></div>
+        
+        <!-- Bulles de stats pour les cartes en main -->
+        <div class="stat-bubble hp-bubble" *ngIf="card.type === 'unit'">{{ card.hp }}</div>
+        <div class="stat-bubble attack-bubble" *ngIf="card.type === 'unit'">{{ card.attack }}</div>
+        <div class="stat-bubble defense-bubble" *ngIf="card.type === 'unit' && card.defense !== undefined && card.defense > 0">{{ card.defense }}</div>
+        <div class="stat-bubble mana-bubble">{{ card.cost }}</div>
+        
+        <div class="card-header">
+          <span class="card-name">{{ card.name }}</span>
+        </div>
+        <div class="card-effect" *ngIf="card.effect">{{ card.effect }}</div>
+      </div>
+    </div>
+  </section>
+
   </main>
 
   <!-- Animations d'attaque -->
@@ -127,28 +149,6 @@
   </div>
 
   <!-- Main du joueur -->
-  <section class="player-hand" *ngIf="gameState.gamePhase === 'player'">
-    <h3>Main</h3>
-    <div class="hand-cards">
-      <div *ngFor="let card of gameState.playerHand; let i = index" 
-           class="hand-card"
-           [class.affordable]="card.cost <= gameState.mana"
-           [class.expensive]="card.cost > gameState.mana"
-           (click)="playCard(i)">
-        <!-- Bulles de stats pour les cartes en main -->
-        <div class="stat-bubble hp-bubble" *ngIf="card.type === 'unit'">{{ card.hp }}</div>
-        <div class="stat-bubble attack-bubble" *ngIf="card.type === 'unit'">{{ card.attack }}</div>
-        <div class="stat-bubble defense-bubble" *ngIf="card.type === 'unit' && card.defense !== undefined && card.defense > 0">{{ card.defense }}</div>
-        <div class="stat-bubble mana-bubble">{{ card.cost }}</div>
-        
-        <div class="card-header">
-          <span class="card-name">{{ card.name }}</span>
-        </div>
-        <div class="card-type">{{ card.type }}</div>
-        <div class="card-effect" *ngIf="card.effect">{{ card.effect }}</div>
-      </div>
-    </div>
-  </section>
 
   <!-- Contrôles -->
   <footer class="game-controls">

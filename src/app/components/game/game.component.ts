@@ -31,6 +31,16 @@ export class GameComponent implements OnInit, OnDestroy {
     this.gameState$ = this.gameService.getGameState();
   }
 
+  // Méthode pour obtenir le chemin de l'image d'une carte
+  getCardImagePath(cardId: string): string {
+    return `cards/${cardId}.png`;
+  }
+
+  // Méthode pour obtenir le chemin de l'image d'un ennemi
+  getEnemyImagePath(enemyId: string): string {
+    return `cards/${enemyId}.png`;
+  }
+
   ngOnInit(): void {
     this.updateGold();
     // Le jeu est déjà démarré depuis le menu, pas besoin de le redémarrer
@@ -704,5 +714,21 @@ export class GameComponent implements OnInit, OnDestroy {
       transform: `rotate(${angle}deg)`,
       transformOrigin: 'left center'
     };
+  }
+
+  handleCardClick(cardIndex: number): void {
+    // Si on attend la sélection d'une cible pour un sort
+    if (this.awaitingTarget) {
+      this.selectCardTarget(cardIndex);
+      return;
+    }
+    
+    // Si la carte peut attaquer, déclencher l'attaque
+    if (this.canUnitAttack(cardIndex)) {
+      this.attackWithUnit(cardIndex);
+      return;
+    }
+    
+    // Sinon, ne rien faire (la carte n'est pas interactive dans ce contexte)
   }
 }

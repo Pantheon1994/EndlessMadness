@@ -44,7 +44,6 @@
           </div>
           
           <div class="card-type-badge">
-            {{ item.card.type }}
             <span *ngIf="item.maxInDeck === 1" class="unique-indicator">UNIQUE</span>
             <span *ngIf="item.maxInDeck > 1 && item.maxInDeck < 10" class="limited-indicator">MAX {{ item.maxInDeck }}</span>
           </div>

@@ -1,199 +1,579 @@
-/* Design moderne et fonctionnel pour mobile et desktop - Endless Madness */
+/* Endless Madness - Game Component CSS - Version ultra-optimisée */
+
+/* === VARIABLES CSS === */
+:root {
+  --primary-blue: #3b82f6;
+  --primary-blue-dark: #1d4ed8;
+  --success-green: #10b981;
+  --danger-red: #ef4444;
+  --warning-orange: #f59e0b;
+  --neutral-gray: #6b7280;
+  --card-transition: all 0.3s ease;
+  --card-hover: translateY(-6px) scale(1.05);
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --card-shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
 
 /* === LAYOUT PRINCIPAL === */
 .game-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 10px;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    color: #fff;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px;
+  font-family: "Segoe UI", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
 }
 
 /* === EN-TÊTE === */
 .game-header {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    color: white;
-    padding: 16px 20px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+  color: white;
+  padding: 16px 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: var(--card-shadow);
 }
 
 .game-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 600;
-    font-size: 16px;
-    gap: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 16px;
+  gap: 20px;
 }
 
 .game-info span {
-    background: rgba(255, 255, 255, 0.15);
-    padding: 8px 12px;
-    border-radius: 8px;
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: var(--transition);
+  background: rgba(255, 255, 255, 0.15);
+  padding: 8px 12px;
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: var(--card-transition);
 }
 
-.game-info span:hover {
-    background: rgba(255, 255, 255, 0.25);
-    transform: translateY(-2px);
-}
-
-.phase-indicator {
-    padding: 6px 16px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.phase-player {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-}
-
-.phase-enemy {
-    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-    color: white;
-    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
-}
-
+/* === ZONE DE BATAILLE === */
 .battle-area {
-    flex: 1;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    gap: 16px;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  background-image: url('/cards/board.png');
     border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    min-height: 500px;
-}
-
-.enemies-section {
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+    height: 980px;
+    background-position: center;
+    width: 100%;
+    padding-top: 15%;
 }
 
+/* === STYLES DE CARTES COMMUNS === */
+.enemies-grid > div,
+.field-card,
+.hand-card {
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  transition: var(--card-transition);
+  cursor: pointer;
+  color: white;
+  box-shadow: var(--card-shadow);
+}
+
+.enemies-grid > div:hover,
+.field-card:hover,
+.hand-card:hover {
+  transform: var(--card-hover);
+  box-shadow: var(--card-shadow-hover);
+  z-index: 10;
+}
+
+/* === ENNEMIS === */
 .enemies-section h3 {
-    color: #dc2626;
-    font-weight: bold;
-    margin-bottom: 12px;
-    text-align: center;
-    font-size: 18px;
+  color: var(--danger-red);
+  font-weight: bold;
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 18px;
 }
 
 .enemies-grid {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    align-items: center;
-    min-height: 120px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 120px;
 }
 
 .enemies-grid > div {
-    width: 120px !important;
-    height: 150px !important;
-    background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-    border: 3px solid #fbbf24;
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px;
-    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
-    position: relative;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    color: white;
-}
-
-.enemies-grid > div:hover {
-    transform: translateY(-4px) scale(1.05);
-    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
-    border-color: #f59e0b;
+  width: 120px;
+  height: 150px;
+  background: linear-gradient(135deg, #dc2626 0%, var(--danger-red) 100%);
+  padding: 8px;
 }
 
 .enemies-grid > div.attack-target:hover,
 .enemies-grid > div.spell-target:hover {
-    border-color: #10b981;
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
 }
 
-.enemy-name {
-    font-size: 12px !important;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: white;
-    text-align: center;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-    line-height: 1.2;
+/* === TERRAIN DU JOUEUR === */
+.player-field h3 {
+  color: var(--primary-blue);
+  font-weight: bold;
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 18px;
 }
 
-.enemy-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    width: 100%;
-    text-align: center;
-    margin-top: auto;
+.field-grid {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 120px;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.field-card {
+  width: 150px;
+  height: 180px;
+}
+
+.field-card.can-attack {
+  box-shadow: 
+    0 0 15px rgba(16, 185, 129, 0.8),
+    0 0 30px rgba(16, 185, 129, 0.6),
+    0 0 45px rgba(16, 185, 129, 0.4),
+    inset 0 0 0 2px rgba(16, 185, 129, 0.7);
+  animation: hearthstoneAttackGlow 1.5s ease-in-out infinite;
+}
+
+.field-card.has-taunt {
+  background: linear-gradient(135deg, #d97706 0%, var(--warning-orange) 100%);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+  animation: tauntGlow 2s ease-in-out infinite;
+}
+
+/* === MAIN DU JOUEUR === */
+.player-hand h3 {
+  color: var(--primary-blue);
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 18px;
+}
+
+
+.hand-card {
+  width: 170px;
+  height: 220px;
+  background: linear-gradient(135deg, var(--warning-orange) 0%, #d97706 100%);
+  padding: 12px;
+}
+
+.hand-card.affordable {
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.hand-card.expensive {
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+/* === NOMS ET STATS === */
+.enemy-name,
+.field-card .card-name,
+.hand-card .card-name {
+  font-weight: bold;
+  text-align: center;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.enemy-stats,
+.field-card .card-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  text-align: center;
+  margin-top: auto;
 }
 
 .enemy-stats .hp,
-.enemy-stats .attack {
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    border-radius: 12px;
-    padding: 4px 8px;
-    font-size: 11px !important;
-    font-weight: bold;
+.enemy-stats .attack,
+.field-card .card-stats .hp,
+.field-card .card-stats .attack,
+.field-card .card-stats .defense {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+/* === BULLES DE STATS === */
+.stat-bubble {
+  position: absolute !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  color: white !important;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
+  border: 2px solid white !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  z-index: 10 !important;
+}
+
+.hp-bubble {
+  background: linear-gradient(135deg, var(--danger-red) 0%, #dc2626 100%) !important;
+  top: -8px !important;
+  right: -8px !important;
+}
+
+.attack-bubble {
+  background: linear-gradient(135deg, #000000 0%, #555555 100%) !important;
+  top: -8px !important;
+  left: -8px !important;
+}
+
+.defense-bubble {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, #2563eb 100%) !important;
+  bottom: -8px !important;
+  left: -8px !important;
+}
+
+.mana-bubble {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%) !important;
+  bottom: -8px !important;
+  right: -8px !important;
+}
+
+/* === BOUTONS === */
+.btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--card-transition);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+  color: white;
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--neutral-gray) 0%, #4b5563 100%);
+  color: white;
+}
+
+.btn-cancel {
+  background: linear-gradient(135deg, var(--danger-red) 0%, #dc2626 100%);
+  color: white;
+}
+
+
+
+/* === STYLES POUR FONCTIONNALITÉS SPÉCIALES === */
+.hand-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.hand-card .card-cost {
+  color: white;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.hand-card .card-type {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.hand-card .card-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.hand-card .card-effect {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  margin-bottom: 8px;
+  line-height: 1.2;
 }
 
 .enemy-effect {
-    font-size: 9px;
-    color: #fbbf24;
-    text-align: center;
-    font-weight: bold;
+  font-size: 9px;
+  color: #fbbf24;
+  text-align: center;
+  font-weight: bold;
 }
 
-/* Capacités spéciales des ennemis */
-.enemy-special-ability {
-    margin-top: 4px;
-    text-align: center;
+.empty-slot {
+  width: 100px;
+  height: 130px;
+  border: 2px dashed #94a3b8;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  font-size: 12px;
+  text-align: center;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 }
 
-.special-ability-badge {
-    display: inline-block;
-    padding: 2px 6px;
-    border-radius: 8px;
-    font-size: 8px;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-    color: white;
-    box-shadow: 0 1px 3px rgba(139, 92, 246, 0.3);
+/* === ANIMATIONS === */
+@keyframes hearthstoneAttackGlow {
+  0% { 
+    box-shadow: 
+      0 0 15px rgba(16, 185, 129, 0.8),
+      0 0 30px rgba(16, 185, 129, 0.6),
+      0 0 45px rgba(16, 185, 129, 0.4),
+      inset 0 0 0 2px rgba(16, 185, 129, 0.7);
+  }
+  50% { 
+    box-shadow: 
+      0 0 20px rgba(16, 185, 129, 1),
+      0 0 40px rgba(16, 185, 129, 0.8),
+      0 0 60px rgba(16, 185, 129, 0.6),
+      inset 0 0 0 3px rgba(16, 185, 129, 0.9);
+  }
+  100% { 
+    box-shadow: 
+      0 0 15px rgba(16, 185, 129, 0.8),
+      0 0 30px rgba(16, 185, 129, 0.6),
+      0 0 45px rgba(16, 185, 129, 0.4),
+      inset 0 0 0 2px rgba(16, 185, 129, 0.7);
+  }
 }
 
-.ability-armor-break {
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    box-shadow: 0 1px 3px rgba(245, 158, 11, 0.3);
+@keyframes attackGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+  50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.9); }
 }
 
-.ability-heal-allies {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3);
+@keyframes tauntGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.6); }
+  50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.9); }
+}
+
+
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .game-container { padding: 8px; }
+  
+  .enemies-grid > div,
+  .field-card {
+    width: 90px !important;
+    height: 120px !important;
+  }
+  
+  .hand-card {
+    width: 130px !important;
+    height: 170px !important;
+    padding: 8px !important;
+  }
+  
+  .stat-bubble {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 10px !important;
+  }
+  
+  .enemy-name,
+  .field-card .card-name,
+  .hand-card .card-name {
+    font-size: 10px !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .game-container { max-width: 1400px; padding: 24px; }
+  
+  .enemies-grid > div,
+  .field-card {
+    width: 140px !important;
+    height: 170px !important;
+  }
+  
+  .hand-card {
+    width: 180px !important;
+    height: 230px !important;
+  }
+  
+  .hand-card:hover { transform: translateY(-12px) scale(1.08); }
+}
+
+.game-info span {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 8px 12px;
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: var(--transition);
+}
+
+.game-info span:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.player-hp.low-health {
+  color: var(--danger-red);
+  animation: lowHealthPulse 2s ease-in-out infinite;
+}
+
+@keyframes lowHealthPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* === SECTIONS === */
+.enemies-section, .player-field {
+  margin-bottom: 20px;
+}
+
+.enemies-section h3 {
+  color: var(--danger-red);
+  font-weight: bold;
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.player-field h3 {
+  color: var(--primary-blue);
+  font-weight: bold;
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 18px;
+}
+
+/* === GRILLES === */
+
+/* === CARTES COMMUNES === */
+.enemies-grid > div, .field-card, .hand-card {
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  transition: var(--transition);
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* === ENNEMIS === */
+.enemies-grid > div {
+  width: 120px;
+  height: 150px;
+  background: linear-gradient(135deg, var(--danger-red) 0%, #dc2626 100%);
+}
+
+.enemies-grid > div:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+}
+
+.enemies-grid > div.targetable:hover {
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
+}
+
+/* === CARTES SUR LE TERRAIN === */
+.field-card {
+  width: 130px;
+  height: 160px;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-dark) 100%);
+}
+
+.field-card:hover {
+  transform: translateY(-4px) scale(1.05);
+  z-index: 10;
+}
+
+.field-card.can-attack {
+  box-shadow: 
+    0 0 15px rgba(16, 185, 129, 0.8),
+    0 0 30px rgba(16, 185, 129, 0.6),
+    0 0 45px rgba(16, 185, 129, 0.4),
+    inset 0 0 0 2px rgba(16, 185, 129, 0.7);
+  animation: hearthstoneAttackGlow 1.5s ease-in-out infinite;
+}
+
+.field-card.mad {
+  background: linear-gradient(135deg, #be185d 0%, #ec4899 100%);
+  animation: madnessEffect 2s ease-in-out infinite;
+}
+
+.field-card.has-taunt {
+  background: linear-gradient(135deg, #d97706 0%, var(--warning-orange) 100%);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+  animation: tauntGlow 2s ease-in-out infinite;
+}
+
+@keyframes attackGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+  50% { box-shadow: 0 0 30px rgba(16, 185, 129, 0.9); }
+}
+
+@keyframes madnessEffect {
+  0%, 100% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(180deg); }
+}
+
+@keyframes tauntGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(245, 158, 11, 0.6); }
+  50% { box-shadow: 0 0 30px rgba(245, 158, 11, 0.9); }
 }
 
 /* Effets temporaires pour les ennemis */
@@ -230,29 +610,14 @@
     font-size: 18px;
 }
 
-.field-grid {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    align-items: center;
-    min-height: 120px;
-    background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.05) 50%, transparent 100%);
-    border-radius: 12px;
-    padding: 16px;
-}
-
 .field-card {
     width: 130px !important;
     height: 160px !important;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    border: 3px solid #60a5fa;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    padding: 8px;
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
     position: relative;
     transition: all 0.3s ease;
@@ -261,20 +626,17 @@
 }
 
 .field-card.can-attack {
-    border-color: #10b981;
     box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
     animation: attackGlow 2s ease-in-out infinite;
 }
 
 .field-card.mad {
-    border-color: #ec4899;
     background: linear-gradient(135deg, #be185d 0%, #ec4899 100%);
     animation: madnessEffect 2s ease-in-out infinite;
 }
 
 /* Style spécial pour les cartes avec l'effet Provoque */
 .field-card.has-taunt {
-    border-color: #f59e0b;
     background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
     box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
     animation: tauntGlow 2s ease-in-out infinite;
@@ -301,12 +663,11 @@
 }
 
 .field-card.targetable:hover {
-    border-color: #10b981;
     box-shadow: 0 8px 25px rgba(16, 185, 129, 0.5);
 }
 
 .field-card .card-name {
-    font-size: 10px;
+    font-size: 14px !important;
     font-weight: bold;
     color: white;
     text-align: center;
@@ -319,7 +680,7 @@
 .field-card .card-stats {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 8px !important;
     width: 100%;
     text-align: center;
     margin-top: auto;
@@ -328,12 +689,10 @@
 .field-card .card-stats .hp,
 .field-card .card-stats .attack,
 .field-card .card-stats .defense {
+    font-size: 11px !important;
     background: rgba(0, 0, 0, 0.8);
     color: white;
     border-radius: 10px;
-    padding: 4px 8px;
-    font-size: 11px !important;
-    font-weight: bold;
 }
 
 .empty-slot {
@@ -403,24 +762,10 @@
     font-size: 18px;
 }
 
-.hand-cards {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    padding: 16px;
-    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    min-height: 160px;
-    align-items: center;
-}
 
 .hand-card {
     width: 170px !important;
     height: 220px !important;
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    border: 3px solid #92400e;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -439,14 +784,11 @@
 }
 
 .hand-card.affordable {
-    border-color: #10b981;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 
 .hand-card.expensive {
-    border-color: #ef4444;
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-    opacity: 0.7;
 }
 
 .hand-card .card-header {
@@ -464,7 +806,6 @@
 }
 
 .hand-card .card-cost {
-    background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
     color: white;
     border-radius: 50%;
     width: 28px !important;
@@ -474,7 +815,6 @@
     justify-content: center;
     font-size: 12px !important;
     font-weight: bold;
-    border: 2px solid white;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
@@ -540,7 +880,6 @@
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
     color: white;
 }
 
@@ -628,9 +967,8 @@
     font-weight: bold !important;
     color: white !important;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8) !important;
-    border: 2px solid white !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
-    z-index: 10 !important;
+    z-index: 15 !important;
     min-width: unset !important;
     padding: 0 !important;
     margin: 0 !important;
@@ -740,15 +1078,6 @@
         font-size: 20px;
         padding: 12px 20px;
     }
-
-    .battle-area {
-        gap: 32px;
-        padding: 32px;
-        margin-bottom: 24px;
-        min-height: 400px;
-        border-radius: 20px;
-    }
-
     .enemies,
     .player-field {
         gap: 16px;
@@ -932,14 +1261,6 @@
     .game-info {
         font-size: 16px;
     }
-
-    .battle-area {
-        gap: 20px;
-        padding: 20px;
-        margin-bottom: 16px;
-        min-height: 280px;
-    }
-
     .enemies,
     .player-field {
         gap: 12px;
@@ -1017,12 +1338,7 @@
         font-size: 12px;
     }
 
-    .battle-area {
-        gap: 12px;
-        padding: 12px;
-        margin-bottom: 8px;
-        min-height: auto;
-    }
+
 
     .enemies,
     .player-field {
@@ -1146,7 +1462,6 @@
     width: 120px !important;
     height: 150px !important;
     background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
-    border: 3px solid #fbbf24;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -1229,12 +1544,10 @@
 
 .ability-armor-break {
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    box-shadow: 0 1px 3px rgba(245, 158, 11, 0.3);
 }
 
 .ability-heal-allies {
     background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3);
 }
 
 /* Effets temporaires pour les ennemis */
@@ -1271,23 +1584,10 @@
     font-size: 18px;
 }
 
-.field-grid {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    align-items: center;
-    min-height: 120px;
-    background: linear-gradient(90deg, transparent 0%, rgba(59, 130, 246, 0.05) 50%, transparent 100%);
-    border-radius: 12px;
-    padding: 16px;
-}
 
 .field-card {
     width: 150px !important;
     height: 180px !important;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    border: 3px solid #60a5fa;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -1302,20 +1602,17 @@
 }
 
 .field-card.can-attack {
-    border-color: #10b981;
     box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
     animation: attackGlow 2s ease-in-out infinite;
 }
 
 .field-card.mad {
-    border-color: #ec4899;
     background: linear-gradient(135deg, #be185d 0%, #ec4899 100%);
     animation: madnessEffect 2s ease-in-out infinite;
 }
 
 /* Style spécial pour les cartes avec l'effet Provoque */
 .field-card.has-taunt {
-    border-color: #f59e0b;
     background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
     box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
     animation: tauntGlow 2s ease-in-out infinite;
@@ -1379,7 +1676,6 @@
 .empty-slot {
     width: 100px;
     height: 130px;
-    border: 2px dashed #94a3b8;
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -1446,12 +1742,10 @@
 .hand-cards {
     display: flex;
     justify-content: center;
-    gap: 12px;
+    gap: 30px;
     flex-wrap: wrap;
     padding: 16px;
-    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     min-height: 160px;
     align-items: center;
 }
@@ -1459,8 +1753,6 @@
 .hand-card {
     width: 170px !important;
     height: 220px !important;
-    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-    border: 3px solid #92400e;
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -1486,7 +1778,6 @@
 .hand-card.expensive {
     border-color: #ef4444;
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-    opacity: 0.7;
 }
 
 .hand-card .card-header {
@@ -1504,7 +1795,6 @@
 }
 
 .hand-card .card-cost {
-    background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 100%);
     color: white;
     border-radius: 50%;
     width: 28px !important;
@@ -1555,256 +1845,223 @@
     margin-top: auto;
 }
 
+/* === IMAGES DE CARTES === */
+.enemy-image, .card-image {
+  position: absolute;
+  top:0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  z-index: 1;
+}
+
 /* === NOTIFICATIONS === */
 .notifications-container {
-    position: fixed;
-    top: 80px;
-    right: 20px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-width: 300px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  max-width: 300px;
 }
 
 .notification {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-    animation: slideInRight 0.3s ease-out, fadeOut 0.5s ease-in 2.5s forwards;
-    transform: translateX(0);
+  background: rgba(59, 130, 246, 0.9);
+  color: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: slideInRight 0.3s ease-out;
 }
 
 @keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
-@keyframes fadeOut {
-    from {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    to {
-        opacity: 0;
-        transform: translateX(100%);
-    }
-}
-
-/* Responsive pour mobile */
-@media (max-width: 768px) {
-    .notifications-container {
-        top: 60px;
-        right: 10px;
-        left: 10px;
-        max-width: none;
-    }
-    
-    .notification {
-        font-size: 12px;
-        padding: 10px 12px;
-    }
-}
-
-/* === ANIMATIONS D'ATTAQUE === */
-.attack-animations {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 500;
-}
-
-.attack-line {
-    position: absolute;
-    background: linear-gradient(90deg, 
-        transparent 0%, 
-        #ff4444 20%, 
-        #ff6666 50%, 
-        #ff4444 80%, 
-        transparent 100%);
-    height: 4px;
-    border-radius: 2px;
-    box-shadow: 0 0 8px rgba(255, 68, 68, 0.8);
-    animation: attackFlash 0.8s ease-out;
-    transform-origin: left center;
-}
-
-@keyframes attackFlash {
-    0% {
-        opacity: 0;
-        transform: scale(0.5);
-    }
-    20% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    80% {
-        opacity: 0.8;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
-@keyframes attackFlash {
-    0% {
-        opacity: 0;
-        transform: scaleX(0) rotate(var(--attack-angle, 0deg));
-    }
-    20% {
-        opacity: 1;
-        transform: scaleX(0.3) rotate(var(--attack-angle, 0deg));
-    }
-    50% {
-        opacity: 1;
-        transform: scaleX(1) rotate(var(--attack-angle, 0deg));
-    }
-    80% {
-        opacity: 0.8;
-        transform: scaleX(1) rotate(var(--attack-angle, 0deg));
-    }
-    100% {
-        opacity: 0;
-        transform: scaleX(1) rotate(var(--attack-angle, 0deg));
-    }
-}
-
-/* === BULLES DE DÉGÂTS FLOTTANTES === */
+/* === ANIMATIONS DE DÉGÂTS FLOTTANTS === */
 .damage-floaters {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
 }
 
 .damage-floater {
-    position: absolute;
-    font-size: 24px;
-    font-weight: bold;
-    color: #ff4444;
-    text-shadow: 
-        2px 2px 0 #fff,
-        -2px -2px 0 #fff,
-        2px -2px 0 #fff,
-        -2px 2px 0 #fff,
-        0 0 8px rgba(255, 68, 68, 0.8);
-    animation: damageFloat 1.5s ease-out forwards;
-    z-index: 1001;
-    transform: translate(-50%, -50%); /* Centrer la bulle sur le point de coordonnée */
+  position: absolute;
+  font-size: 20px;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  z-index: 1001;
+  pointer-events: none;
+  animation: floatDamage 2s ease-out forwards;
 }
 
-@keyframes damageFloat {
-    0% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-    20% {
-        opacity: 1;
-        transform: translateY(-10px) scale(1.2);
-    }
-    50% {
-        opacity: 1;
-        transform: translateY(-30px) scale(1.1);
-    }
-    80% {
-        opacity: 0.7;
-        transform: translateY(-50px) scale(1);
-    }
-    100% {
-        opacity: 0;
-        transform: translateY(-80px) scale(0.8);
-    }
+/* Dégâts aux ennemis (rouge) */
+.damage-floater.damage {
+  color: #ef4444;
+  text-shadow: 2px 2px 4px rgba(239, 68, 68, 0.8), 0 0 10px rgba(239, 68, 68, 0.6);
 }
 
-/* Variantes de couleur pour différents types de dégâts */
-.damage-floater.critical {
-    color: #ff6b35;
-    font-size: 28px;
-    text-shadow: 
-        2px 2px 0 #fff,
-        -2px -2px 0 #fff,
-        2px -2px 0 #fff,
-        -2px 2px 0 #fff,
-        0 0 12px rgba(255, 107, 53, 1);
-}
-
+/* Soins aux alliés (vert) */
 .damage-floater.healing {
-    color: #10b981;
-    text-shadow: 
-        2px 2px 0 #fff,
-        -2px -2px 0 #fff,
-        2px -2px 0 #fff,
-        -2px 2px 0 #fff,
-        0 0 8px rgba(16, 185, 129, 0.8);
+  color: #10b981;
+  text-shadow: 2px 2px 4px rgba(16, 185, 129, 0.8), 0 0 10px rgba(16, 185, 129, 0.6);
 }
 
-/* Animation de flash pour les cibles attaquées */
-.enemy.being-attacked,
-.field-card.being-attacked {
-    animation: hitFlash 0.6s ease-out;
+/* Dégâts aux alliés (orange/rouge plus intense) */
+.damage-floater.ally-damage {
+  color: #f59e0b;
+  text-shadow: 2px 2px 4px rgba(245, 158, 11, 0.8), 0 0 10px rgba(245, 158, 11, 0.6);
+  font-size: 22px;
 }
 
-@keyframes hitFlash {
-    0% { background-color: transparent; }
-    20% { background-color: rgba(255, 68, 68, 0.3); }
-    40% { background-color: rgba(255, 68, 68, 0.6); }
-    60% { background-color: rgba(255, 68, 68, 0.3); }
-    100% { background-color: transparent; }
+/* Animation principale des dégâts flottants */
+@keyframes floatDamage {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  20% {
+    transform: translateY(-20px) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-80px) scale(0.8);
+    opacity: 0;
+  }
 }
 
-/* Animation de lueur pour les attaquants */
-.enemy.attacking {
-    animation: attackGlow 0.8s ease-out;
+/* Animation spéciale pour les gros dégâts */
+.damage-floater.critical {
+  animation: floatCriticalDamage 2.5s ease-out forwards;
+  font-size: 24px;
 }
 
-@keyframes attackGlow {
-    0% { 
-        box-shadow: 0 0 0 rgba(255, 215, 0, 0);
-        transform: scale(1);
-    }
-    30% { 
-        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
-        transform: scale(1.05);
-    }
-    70% { 
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
-        transform: scale(1.02);
-    }
-    100% { 
-        box-shadow: 0 0 0 rgba(255, 215, 0, 0);
-        transform: scale(1);
-    }
+@keyframes floatCriticalDamage {
+  0% {
+    transform: translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  15% {
+    transform: translateY(-15px) scale(1.4) rotate(-5deg);
+    opacity: 1;
+  }
+  30% {
+    transform: translateY(-30px) scale(1.3) rotate(5deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100px) scale(0.6) rotate(0deg);
+    opacity: 0;
+  }
 }
 
-/* Responsive pour mobile */
+/* Animation pour les soins */
+.damage-floater.healing {
+  animation: floatHealing 2s ease-out forwards;
+}
+
+@keyframes floatHealing {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  20% {
+    transform: translateY(-15px) scale(1.1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-40px) scale(1.0);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-70px) scale(0.9);
+    opacity: 0;
+  }
+}
+
+/* === CONTRÔLES === */
+.game-controls {
+  padding: 16px;
+  text-align: center;
+}
+
+.target-selection, .attack-selection {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.target-message {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.victory-screen, .defeat-screen {
+  background: rgba(16, 185, 129, 0.9);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.defeat-screen {
+  background: rgba(239, 68, 68, 0.9);
+}
+
+.victory-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+/* === RESPONSIVE === */
 @media (max-width: 768px) {
-    .damage-floater {
-        font-size: 20px;
-    }
-    
-    .damage-floater.critical {
-        font-size: 24px;
-    }
-    
-    .attack-line {
-        height: 3px;
-    }
+  .game-container {
+    padding: 5px;
+  }
+  
+  .game-info {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .enemies-grid > div, .field-card {
+    width: 100px;
+    height: 130px;
+  }
+  
+  .hand-card {
+    width: 140px;
+    height: 180px;
+  }
+  
+  .stat-bubble {
+    width: 24px;
+    height: 24px;
+    font-size: 9px;
+  }
+  
+  .victory-buttons {
+    flex-direction: column;
+  }
+}
+
+/* S'assurer que tous les éléments sont au-dessus des images */
+.enemies-grid > div > *:not(.enemy-image),
+.field-card > *:not(.card-image),
+.hand-card > *:not(.card-image) {
+  position: relative;
+  z-index: 2;
 }
