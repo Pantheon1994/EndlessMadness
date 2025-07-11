@@ -28,4 +28,20 @@ export class StorageService {
   clearSave(): void {
     localStorage.removeItem(this.STORAGE_KEY);
   }
+
+  // Reset complet de toute la progression
+  resetAll(): void {
+    // Vider complètement le localStorage pour ce jeu
+    const keys = Object.keys(localStorage);
+    keys.forEach(key => {
+      if (key.includes('endless-madness') || key.includes('player-') || key.includes('daily-market')) {
+        localStorage.removeItem(key);
+      }
+    });
+    
+    // Alternativement, on peut tout vider (plus radical)
+    // localStorage.clear();
+    
+    console.log('Toute la progression a été réinitialisée !');
+  }
 }

@@ -37,10 +37,11 @@ export class MenuComponent {
 
   // Méthode pour réinitialiser la progression
   resetProgress(): void {
-    if (confirm('Êtes-vous sûr de vouloir réinitialiser votre progression ? Cette action est irréversible.')) {
-      this.cardService.resetPlayerProgress();
+    if (confirm('Êtes-vous sûr de vouloir réinitialiser TOUTE votre progression ? Cette action supprimera TOUT : cartes, or, étages débloqués, etc. Cette action est IRRÉVERSIBLE.')) {
+      // Utiliser la nouvelle méthode de reset complet
+      this.gameService.resetAllProgress();
       this.loadAvailableFloors();
-      alert('Progression réinitialisée ! Vous commencez maintenant avec 3 guerriers de base.');
+      alert('TOUTE la progression a été réinitialisée ! Tout a été supprimé du localStorage.');
     }
   }
 

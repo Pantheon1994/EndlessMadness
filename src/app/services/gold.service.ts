@@ -33,6 +33,12 @@ export class GoldService {
     this.saveGold();
   }
 
+  // Reset complet de l'or (supprime du localStorage)
+  resetGoldCompletely(): void {
+    this.gold = 100;
+    localStorage.removeItem('player-gold');
+  }
+
   private saveGold(): void {
     localStorage.setItem('player-gold', this.gold.toString());
   }

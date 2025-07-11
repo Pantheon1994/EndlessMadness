@@ -819,13 +819,25 @@ export class GameService {
     // Récupérer 1 de mana (jusqu'au maximum de 10)
     this.gameState.mana = Math.min(this.gameState.mana + 1, this.gameState.maxMana);
 
+    // Génération de mana par les Puits de Mana vivants
+    const manaWells = this.gameState.cardsInPlay.filter(card => 
+      card.id === 'mana-well' && card.currentHp !== undefined && card.currentHp > 0
+    );
+    
+    if (manaWells.length > 0) {
+      const bonusMana = manaWells.length;
+      this.gameState.mana = Math.min(this.gameState.mana + bonusMana, this.gameState.maxMana);
+      this.addNotification(`Puits de Mana : +${bonusMana} mana généré !`);
+    }
+
     // Piocher automatiquement une carte à la fin du tour
     this.drawCardEndOfTurn();
 
     // Réinitialiser les attaques des unités
     this.gameState.cardsInPlay.forEach(card => {
       card.hasAttackedThisTurn = false;
-      card.canAttackThisTurn = true;
+      // Le Puits de Mana ne peut jamais attaquer
+      card.canAttackThisTurn = card.id !== 'mana-well';
     });
 
     // Réinitialiser les attaques des ennemis
@@ -1205,10 +1217,31 @@ export class GameService {
   // Vérifier si une unité peut attaquer
   canUnitAttack(unitIndex: number): boolean {
     const unit = this.gameState.cardsInPlay[unitIndex];
+    
+    // Le Puits de Mana ne peut jamais attaquer
+    if (unit && unit.id === 'mana-well') {
+      return false;
+    }
+    
     return !!(unit && unit.currentHp && unit.currentHp > 0 && 
               unit.attack && !unit.hasAttackedThisTurn && 
               unit.canAttackThisTurn !== false && 
               this.gameState.enemies.length > 0);
+  }
+
+  // Reset complet de toute la progression du jeu
+  resetAllProgress(): void {
+    // Reset des services
+    this.cardService.resetAllProgress();
+    this.goldService.resetGoldCompletely();
+    
+    // Reset de l'état du jeu
+    this.resetGameState(1);
+    
+    // Notification à l'utilisateur
+    this.addNotification("Toute la progression a été réinitialisée !");
+    
+    console.log("Reset complet effectué - Toutes les données ont été supprimées");
   }
 
   // Calcul de la récompense d'or avec progression infinie équilibrée

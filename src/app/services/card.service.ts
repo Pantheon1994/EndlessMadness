@@ -31,7 +31,7 @@ export class CardService {
       id: 'guard-of-void',
       name: 'Garde du Néant',
       type: 'unit',
-      cost: 2,
+      cost: 3,
       hp: 4,
       attack: 1,
       defense: 1,
@@ -43,7 +43,7 @@ export class CardService {
       id: 'fire-mage',
       name: 'Mage de Feu',
       type: 'unit',
-      cost: 2,
+      cost: 3,
       hp: 3,
       attack: 3,
       defense: 0,
@@ -55,7 +55,7 @@ export class CardService {
       id: 'healing-potion',
       name: 'Potion de Soin',
       type: 'spell',
-      cost: 1,
+      cost: 2,
       effect: 'Restaure 3 PV à une unité ciblée',
       price: 30,
       rarity: 'normal'
@@ -64,7 +64,7 @@ export class CardService {
       id: 'berserker',
       name: 'Berserker',
       type: 'unit',
-      cost: 3,
+      cost: 4,
       hp: 5,
       attack: 3,
       defense: 0,
@@ -76,7 +76,7 @@ export class CardService {
       id: 'basic-warrior',
       name: 'Guerrier',
       type: 'unit',
-      cost: 1,
+      cost: 2,
       hp: 3,
       attack: 1,
       defense: 0,
@@ -88,7 +88,7 @@ export class CardService {
       id: 'armored-knight',
       name: 'Chevalier Blindé',
       type: 'unit',
-      cost: 3,
+      cost: 4,
       hp: 4,
       attack: 2,
       defense: 2,
@@ -100,7 +100,7 @@ export class CardService {
       id: 'fireball',
       name: 'Boule de Feu',
       type: 'spell',
-      cost: 2,
+      cost: 3,
       effect: 'Inflige 3 dégâts à un ennemi ciblé',
       price: 35,
       rarity: 'blue'
@@ -109,7 +109,7 @@ export class CardService {
       id: 'shield-boost',
       name: 'Renforcement',
       type: 'spell',
-      cost: 1,
+      cost: 2,
       effect: 'Donne +2 Défense à une unité ciblée',
       price: 25,
       rarity: 'normal'
@@ -127,7 +127,7 @@ export class CardService {
       id: 'rage-boost',
       name: 'Rage Bestiale',
       type: 'spell',
-      cost: 2,
+      cost: 3,
       effect: 'Double les dégâts d\'une unité ciblée pendant 2 tours',
       price: 50,
       rarity: 'epic'
@@ -136,7 +136,7 @@ export class CardService {
       id: 'arsenal',
       name: 'Arsenal',
       type: 'spell',
-      cost: 4,
+      cost: 5,
       effect: 'Augmente définitivement l\'attaque d\'une unité de +2',
       price: 80,
       rarity: 'legendary'
@@ -145,7 +145,7 @@ export class CardService {
       id: 'stun-bolt',
       name: 'Éclair Paralysant',
       type: 'spell',
-      cost: 3,
+      cost: 4,
       effect: 'Étourdit un ennemi pendant 2 tours',
       price: 60,
       rarity: 'blue'
@@ -154,7 +154,7 @@ export class CardService {
       id: 'divine-protection',
       name: 'Protection Divine',
       type: 'spell',
-      cost: 5,
+      cost: 6,
       effect: 'Rend une unité invulnérable pendant 1 tour',
       price: 100,
       rarity: 'legendary'
@@ -163,7 +163,7 @@ export class CardService {
       id: 'poison',
       name: 'Poison',
       type: 'spell',
-      cost: 2,
+      cost: 3,
       effect: 'Inflige 1 dégât par tour à un ennemi jusqu\'à sa mort',
       price: 45,
       rarity: 'blue'
@@ -181,7 +181,7 @@ export class CardService {
       id: 'card-draw',
       name: 'Pioche',
       type: 'spell',
-      cost: 1,
+      cost: 2,
       effect: 'Pioche 2 cartes de votre deck',
       price: 25,
       rarity: 'normal'
@@ -190,7 +190,7 @@ export class CardService {
       id: 'explosion',
       name: 'Explosion',
       type: 'spell',
-      cost: 6,
+      cost: 7,
       effect: 'Inflige 2 dégâts à tous les ennemis et 1 dégât à toutes vos unités',
       price: 120,
       rarity: 'epic'
@@ -199,13 +199,25 @@ export class CardService {
       id: 'demonist',
       name: 'Démoniste',
       type: 'unit',
-      cost: 4,
+      cost: 5,
       hp: 3,
       attack: 2,
       defense: 0,
       effect: 'Invoque un Squelette (1/1) quand un ennemi meurt',
       price: 90,
       rarity: 'epic'
+    },
+    {
+      id: 'mana-well',
+      name: 'Puits de Mana',
+      type: 'unit',
+      cost: 3,
+      hp: 1,
+      attack: 0,
+      defense: 0,
+      effect: 'Ne peut pas attaquer. Génère +1 mana par tour tant qu\'elle est en vie',
+      price: 80,
+      rarity: 'legendary'
     }
   ];
 
@@ -428,6 +440,26 @@ export class CardService {
 
   resetPlayer(): void {
     this.storageService.clearSave();
+    this.initializePlayer();
+  }
+
+  // Reset complet de toute la progression
+  resetAllProgress(): void {
+    // Réinitialiser le joueur avec les données de base
+    this.player = {
+      gold: 100,
+      collection: [],
+      deck: [],
+      maxFloorReached: 1
+    };
+    
+    // Réinitialiser le marché quotidien
+    this.dailyMarket = null;
+    
+    // Vider complètement le localStorage
+    this.storageService.resetAll();
+    
+    // Réinitialiser avec les données de base
     this.initializePlayer();
   }
 
